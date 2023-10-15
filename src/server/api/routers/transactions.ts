@@ -80,8 +80,7 @@ export const transactionsRouter = createTRPCRouter({
     .input(z.object({
       id: z.string(),
       description: z.string(),
-      type: z.enum(["INCOME", "EXPENSE"]),
-      date: z.string(),
+      date: z.date(),
       amount: z.number(),
     }))
     .mutation(async ({ ctx, input }) => {

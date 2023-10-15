@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { UpdateTransactionDialog } from "~/components/update-transaction-dialog";
 import { api } from "~/utils/api";
 import { transactionSchema } from "./schema";
 
@@ -31,6 +32,7 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
+  const [showUpdateDialog, setShowUpdateDialog] = React.useState<boolean>(false);
 
   const transaction = transactionSchema.parse(row.original);
 
@@ -60,7 +62,10 @@ export function DataTableRowActions<TData>({
             Copy ID
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            className="flex cursor-pointer items-center"
+            onSelect={() => setShowUpdateDialog(true)}
+          >
             Edit
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -71,6 +76,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <UpdateTransactionDialog transaction={transaction} open={showUpdateDialog} setOpen={setShowUpdateDialog} />
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
