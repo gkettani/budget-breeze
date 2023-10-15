@@ -15,7 +15,7 @@ export default function Transactions() {
         </div>
         <CreateTransactionDialog />
       </div>
-      <DataTable columns={columns} data={transactions ?? []} />
+      <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
     </div>
   );
 }

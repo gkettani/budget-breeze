@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-table";
 import type { ColumnDef, SortingState, ColumnFiltersState } from "@tanstack/react-table";
 import * as React from "react";
+import { Icons } from "~/components/icons";
 import { DataTablePagination } from "~/components/transactions/data-table-pagination";
 import { Input } from "~/components/ui/input";
 import {
@@ -22,11 +23,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isLoading: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -82,7 +85,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {(!isLoading && table.getRowModel().rows?.length) ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -98,7 +101,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  {isLoading ? <Icons.spinner className="h-6 w-6 text-primary m-auto animate-spin" /> : "No transactions found."}
                 </TableCell>
               </TableRow>
             )}
