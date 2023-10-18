@@ -1,9 +1,9 @@
+import type { Transaction } from '@prisma/client';
 import type { ColumnDef } from "@tanstack/react-table";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { DataTableRowActions } from "./data-table-row-actions";
-import type { Transaction } from "./schema";
 
 export const columns: ColumnDef<Transaction>[] = [
   {

@@ -1,3 +1,4 @@
+import type { Transaction } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
 import React from "react";
 import { Icons } from "~/components/icons";
@@ -22,7 +23,6 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { UpdateTransactionDialog } from "~/components/update-transaction-dialog";
 import { api } from "~/utils/api";
-import { transactionSchema } from "./schema";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -34,7 +34,7 @@ export function DataTableRowActions<TData>({
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
   const [showUpdateDialog, setShowUpdateDialog] = React.useState<boolean>(false);
 
-  const transaction = transactionSchema.parse(row.original);
+  const transaction = row.original as Transaction;
 
   const utils = api.useContext();
 

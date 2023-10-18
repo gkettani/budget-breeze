@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Category } from '@prisma/client';
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -22,6 +23,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { cn } from "~/lib/utils";
 
 const createTransactionSchema = z.object({
@@ -30,6 +38,7 @@ const createTransactionSchema = z.object({
   date: z.date({
     required_error: 'Date is required',
   }),
+  categoryId: z.string().optional(),
 });
 
 export type CreateTransactionFormValues = z.infer<typeof createTransactionSchema>;
@@ -37,9 +46,11 @@ export type CreateTransactionFormValues = z.infer<typeof createTransactionSchema
 export function CreateTransaction({
   onSubmit,
   isLoading,
+  categories,
 }: {
   onSubmit: (values: CreateTransactionFormValues) => void;
   isLoading: boolean;
+  categories: Category[] | undefined;
 }) {
   const form = useForm<CreateTransactionFormValues>({
     resolver: zodResolver(createTransactionSchema),
@@ -93,7 +104,7 @@ export function CreateTransaction({
                         variant={"outline"}
                         className={cn(
                           "font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (
@@ -118,6 +129,34 @@ export function CreateTransaction({
                   </PopoverContent>
                 </Popover>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category for you transaction" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {categories?.map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id}
+                      className="text-sm"
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

@@ -59,16 +59,18 @@ export const transactionsRouter = createTRPCRouter({
       description: z.string(),
       date: z.date(),
       amount: z.number(),
+      categoryId: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
-      const { description, date, amount } = input;
+      const { description, date, amount, categoryId } = input;
 
       const transaction = await db.transaction.create({
         data: {
           description,
           date,
           amount,
+          categoryId,
           userId: ctx.session.user.id,
         },
       });
@@ -82,6 +84,7 @@ export const transactionsRouter = createTRPCRouter({
       description: z.string(),
       date: z.date(),
       amount: z.number(),
+      categoryId: z.string().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;

@@ -59,6 +59,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   transactions  Transaction[]
+  categories    Category[]
 }
 
 model VerificationToken {
@@ -70,14 +71,23 @@ model VerificationToken {
 }
 
 model Transaction {
-  id          String          @id @default(cuid())
+  id          String   @id @default(cuid())
   userId      String
   description String
   amount      Float
   date        DateTime
-  // category    String
+  categoryId  String?
   // type        TransactionType
-  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Category {
+  id     String @id @default(cuid())
+  userId String
+  name   String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

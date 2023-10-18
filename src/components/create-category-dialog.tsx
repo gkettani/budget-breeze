@@ -1,28 +1,25 @@
 import React from "react";
-import { CreateTransaction } from "~/components/forms/create-transaction-form";
+import { CreateCategory } from "~/components/forms/create-category-form";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { api } from "~/utils/api";
 
-export default function CreateTransactionDialog() {
+export default function CreateCategoryDialog() {
   const [open, setOpen] = React.useState<boolean>(false);
 
   const utils = api.useContext();
 
-  const { data: categories } = api.categories.list.useQuery();
-
-  const { mutate: createTransaction, isLoading } = api.transactions.create.useMutation({
+  const { mutate: createCategory, isLoading } = api.categories.create.useMutation({
     onSuccess: () => {
       setOpen(false);
-      void utils.transactions.invalidate();
+      void utils.categories.invalidate();
     },
   });
 
@@ -31,17 +28,14 @@ export default function CreateTransactionDialog() {
       <DialogTrigger asChild>
         <Button variant="default" className="">
           <Icons.plus className="h-4 w-4 mr-2" />
-          New transaction
+          New Category
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create a new transaction</DialogTitle>
-          <DialogDescription>
-            Start creating a new transaction by filling out the form below.
-          </DialogDescription>
+          <DialogTitle>Create a new category</DialogTitle>
         </DialogHeader>
-        <CreateTransaction onSubmit={createTransaction} categories={categories} isLoading={isLoading} />
+        <CreateCategory onSubmit={createCategory} isLoading={isLoading} />
       </DialogContent>
     </Dialog>
   );
