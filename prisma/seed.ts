@@ -26,7 +26,7 @@ function main() {
       await db.transaction.create({
         data: tsx,
       });
-    })
+    }),
   );
 }
 
