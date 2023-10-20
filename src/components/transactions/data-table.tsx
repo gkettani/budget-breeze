@@ -9,6 +9,7 @@ import {
 import type { ColumnDef, SortingState, ColumnFiltersState } from "@tanstack/react-table";
 import * as React from "react";
 import { Icons } from "~/components/icons";
+import { DataTableFacetedFilter } from "~/components/transactions/data-table-faceted-filter";
 import { DataTablePagination } from "~/components/transactions/data-table-pagination";
 import { Input } from "~/components/ui/input";
 import {
@@ -19,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { api } from "~/utils/api";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -34,6 +36,8 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const { data: categories } = api.categories.list.useQuery();
 
   const table = useReactTable({
     data,
@@ -54,15 +58,22 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-5">
         <Input
           placeholder="Filter transactions..."
           value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("description")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm h-8"
         />
+        {table.getColumn("category") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("category")}
+            title="Category"
+            options={categories ?? []}
+          />
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

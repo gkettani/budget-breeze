@@ -71,28 +71,25 @@ model VerificationToken {
 }
 
 model Transaction {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   userId      String
   description String
   amount      Float
   date        DateTime
   categoryId  String?
-  // type        TransactionType
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    Category? @relation(fields: [categoryId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([categoryId])
   @@index([userId])
 }
 
 model Category {
-  id     String @id @default(cuid())
-  userId String
-  name   String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String        @id @default(cuid())
+  userId       String
+  name         String        @unique
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
 
   @@index([userId])
 }
-
-// enum TransactionType {
-//   INCOME
-//   EXPENSE
-// }

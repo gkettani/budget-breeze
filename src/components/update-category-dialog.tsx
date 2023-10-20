@@ -26,6 +26,7 @@ export function UpdateCategoryDialog({
     onSuccess: () => {
       setOpen(false);
       void utils.categories.invalidate();
+      void utils.transactions.invalidate();
     },
   });
 

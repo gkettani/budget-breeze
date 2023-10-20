@@ -49,6 +49,7 @@ export const transactionsRouter = createTRPCRouter({
           userId: ctx.session.user.id,
         },
         orderBy: { date: "desc" },
+        include: { category: true },
       });
 
       return transactions;
