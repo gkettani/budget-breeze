@@ -23,7 +23,6 @@ import {
 import { UpdateCategoryDialog } from "~/components/update-category-dialog";
 import { api } from "~/utils/api";
 
-
 export function CategoriesActionMenu({ category }: { category: Category }) {
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
   const [showUpdateDialog, setShowUpdateDialog] = React.useState<boolean>(false);
@@ -34,6 +33,7 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
     onSuccess: () => {
       setShowDeleteAlert(false);
       void utils.categories.invalidate();
+      void utils.transactions.invalidate();
     },
   });
 
