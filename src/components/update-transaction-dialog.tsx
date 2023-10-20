@@ -1,3 +1,4 @@
+import type { Transaction } from "@prisma/client";
 import React from "react";
 import { UpdateTransaction } from "~/components/forms/update-transaction-form";
 import type { UpdateTransactionFormValues } from "~/components/forms/update-transaction-form";
@@ -9,7 +10,6 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { api } from "~/utils/api";
-import type { Transaction } from "./transactions/schema";
 
 export function UpdateTransactionDialog({
   transaction,

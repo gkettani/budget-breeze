@@ -26,9 +26,8 @@ export default function CreateCategoryDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="">
-          <Icons.plus className="h-4 w-4 mr-2" />
-          New Category
+        <Button className="h-8 w-8 p-0">
+          <Icons.plus className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
