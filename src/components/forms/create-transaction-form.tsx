@@ -133,7 +133,7 @@ export function CreateTransaction({
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           control={form.control}
           name="categoryId"
           render={({ field }) => (

@@ -23,6 +23,8 @@ export function UpdateTransactionDialog({
 
   const utils = api.useContext();
 
+  const { data: categories } = api.categories.list.useQuery();
+
   const { mutate: updateTransaction, isLoading } = api.transactions.update.useMutation({
     onSuccess: () => {
       setOpen(false);
@@ -43,7 +45,7 @@ export function UpdateTransactionDialog({
             Update the transaction details below
           </DialogDescription>
         </DialogHeader>
-        <UpdateTransaction onSubmit={onSubmit} isLoading={isLoading} transaction={transaction} />
+        <UpdateTransaction onSubmit={onSubmit} isLoading={isLoading} transaction={transaction} categories={categories} />
       </DialogContent>
     </Dialog>
   );
