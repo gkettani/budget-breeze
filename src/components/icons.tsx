@@ -12,6 +12,7 @@ import {
   X,
   Trash,
   Plus,
+  Folder,
 } from 'lucide-react';
 
 type IconProps = React.HTMLAttributes<SVGElement>
@@ -51,4 +52,5 @@ export const Icons = {
   XMark: (props: IconProps) => <X {...props} />,
   trash: (props: IconProps) => <Trash {...props} />,
   plus: (props: IconProps) => <Plus {...props} />,
+  folder: (props: IconProps) => <Folder {...props} />,
 };
