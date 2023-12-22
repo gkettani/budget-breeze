@@ -1,6 +1,7 @@
 import React from "react";
 import CategoriesList from "~/components/categories/categories-list";
-import CreateTransactionDialog from "~/components/create-transaction-dialog";
+import CreateTransactionDialog from "~/components/dialogs/create-transaction";
+import FinancialAccountsList from "~/components/financial-accounts/financial-accounts-list";
 import { columns } from "~/components/transactions/columns";
 import { DataTable } from "~/components/transactions/data-table";
 import { api } from "~/utils/api";
@@ -8,6 +9,7 @@ import { api } from "~/utils/api";
 export default function Transactions() {
   const { data: transactions, isLoading: isTransactionsLoading } = api.transactions.list.useQuery();
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.list.useQuery();
+  const { data: financialAccounts, isLoading: isFinancialAccountsLoading } = api.financialAccounts.list.useQuery();
 
   // calculate the total amount of all transactions for each category
   const categoriesWithTotalAmount = React.useMemo(() => {
@@ -52,10 +54,11 @@ export default function Transactions() {
         <CreateTransactionDialog />
       </div>
       <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
+      <FinancialAccountsList financialAccounts={financialAccounts} isLoading={isFinancialAccountsLoading} />
       <CategoriesList categories={categories} isLoading={isCategoriesLoading} />
       {categoriesWithTotalAmount.length > 0 && (
         <div className="mt-10 w-[350px]">
-          <h3 className="font-bold text-xl">Categories</h3>
+          <h3 className="font-bold text-xl">Categories Statistics</h3>
           <ul className="mt-4 space-y-4">
             {categoriesWithTotalAmount.map((category) => (
               <li key={category.id} className="border flex justify-between items-center shadow-sm rounded px-4 py-1">

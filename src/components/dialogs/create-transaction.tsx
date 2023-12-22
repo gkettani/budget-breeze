@@ -1,5 +1,5 @@
 import React from "react";
-import { CreateTransaction } from "~/components/forms/create-transaction-form";
+import { CreateTransactionForm } from "~/components/forms/create-transaction";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import {
@@ -18,11 +18,13 @@ export default function CreateTransactionDialog() {
   const utils = api.useContext();
 
   const { data: categories } = api.categories.list.useQuery();
+  const { data: financialAccounts } = api.financialAccounts.list.useQuery();
 
   const { mutate: createTransaction, isLoading } = api.transactions.create.useMutation({
     onSuccess: () => {
-      setOpen(false);
       void utils.transactions.invalidate();
+      void utils.financialAccounts.invalidate();
+      setOpen(false);
     },
   });
 
@@ -41,7 +43,12 @@ export default function CreateTransactionDialog() {
             Start creating a new transaction by filling out the form below.
           </DialogDescription>
         </DialogHeader>
-        <CreateTransaction onSubmit={createTransaction} categories={categories} isLoading={isLoading} />
+        <CreateTransactionForm
+          onSubmit={createTransaction}
+          categories={categories}
+          financialAccounts={financialAccounts}
+          isLoading={isLoading}
+        />
       </DialogContent>
     </Dialog>
   );

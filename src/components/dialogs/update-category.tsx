@@ -1,7 +1,7 @@
 import type { Category } from "@prisma/client";
 import React from "react";
-import { UpdateCategory } from "~/components/forms/update-category-form";
-import type { UpdateCategoryFormValues } from "~/components/forms/update-category-form";
+import { UpdateCategoryForm } from "~/components/forms/update-category";
+import type { UpdateCategoryFormValues } from "~/components/forms/update-category";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/dialog";
 import { api } from "~/utils/api";
 
-export function UpdateCategoryDialog({
+export default function UpdateCategoryDialog({
   category,
   open,
   setOpen,
@@ -24,9 +24,9 @@ export function UpdateCategoryDialog({
 
   const { mutate: updatecategory, isLoading } = api.categories.update.useMutation({
     onSuccess: () => {
-      setOpen(false);
       void utils.categories.invalidate();
       void utils.transactions.invalidate();
+      setOpen(false);
     },
   });
 
@@ -40,7 +40,7 @@ export function UpdateCategoryDialog({
         <DialogHeader>
           <DialogTitle>Update category</DialogTitle>
         </DialogHeader>
-        <UpdateCategory onSubmit={onSubmit} isLoading={isLoading} category={category} />
+        <UpdateCategoryForm onSubmit={onSubmit} isLoading={isLoading} category={category} />
       </DialogContent>
     </Dialog>
   );

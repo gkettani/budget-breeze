@@ -4,9 +4,10 @@
  *
  * We also create a few inference helpers for input and output types.
  */
-import { httpBatchLink, loggerLink } from "@trpc/client";
+import { TRPCClientError, httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
+import Router from "next/router";
 import superjson from "superjson";
 import { type AppRouter } from "~/server/api/root";
 
@@ -20,6 +21,20 @@ const getBaseUrl = () => {
 export const api = createTRPCNext<AppRouter>({
   config() {
     return {
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            retry: (failureCount, error) => {
+              if (error instanceof TRPCClientError) {
+                if (error.message === 'UNAUTHORIZED') {
+                  void Router.push('/');
+                }
+              }
+              return failureCount < 3;
+            },
+          },
+        },
+      },
       /**
        * Transformer used for data de-serialization from the server.
        *

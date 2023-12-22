@@ -1,5 +1,5 @@
 import React from "react";
-import { CreateCategory } from "~/components/forms/create-category-form";
+import { CreateCategoryForm } from "~/components/forms/create-category";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import {
@@ -18,8 +18,8 @@ export default function CreateCategoryDialog() {
 
   const { mutate: createCategory, isLoading } = api.categories.create.useMutation({
     onSuccess: () => {
-      setOpen(false);
       void utils.categories.invalidate();
+      setOpen(false);
     },
   });
 
@@ -34,7 +34,7 @@ export default function CreateCategoryDialog() {
         <DialogHeader>
           <DialogTitle>Create a new category</DialogTitle>
         </DialogHeader>
-        <CreateCategory onSubmit={createCategory} isLoading={isLoading} />
+        <CreateCategoryForm onSubmit={createCategory} isLoading={isLoading} />
       </DialogContent>
     </Dialog>
   );

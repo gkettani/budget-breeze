@@ -37,7 +37,7 @@ const updateTransactionSchema = z.object({
 
 export type UpdateTransactionFormValues = z.infer<typeof updateTransactionSchema>;
 
-export function UpdateTransaction({
+export function UpdateTransactionForm({
   onSubmit,
   isLoading,
   transaction,

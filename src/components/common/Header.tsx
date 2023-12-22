@@ -34,7 +34,9 @@ export default function Header() {
           ) : (
             <>
               <li>
-                <button onClick={() => void signIn()}>Login</button>
+                <button onClick={() => void signIn(undefined, {
+                  callbackUrl: `${window.location.origin}/app`,
+                })}>Login</button>
               </li>
               <li>
                 <button className="bg-slate-200 text-black py-1 px-2 border rounded" onClick={() => void signIn()}>Register</button>

@@ -1,6 +1,6 @@
-import type { Category } from "@prisma/client";
+import type { FinancialAccount } from "@prisma/client";
 import React from "react";
-import UpdateCategoryDialog from "~/components/dialogs/update-category";
+import UpdateFinancialAccountDialog from "~/components/dialogs/update-financial-account";
 import { Icons } from "~/components/icons";
 import {
   AlertDialog,
@@ -23,17 +23,17 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { api } from "~/utils/api";
 
-export function CategoriesActionMenu({ category }: { category: Category }) {
+export function FinancialAccountsActionMenu({ financialAccount }: { financialAccount: FinancialAccount }) {
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
   const [showUpdateDialog, setShowUpdateDialog] = React.useState<boolean>(false);
 
   const utils = api.useContext();
 
-  const { mutate: deleteCategory, isLoading: isDeleteLoading } = api.categories.delete.useMutation({
+  const { mutate: deleteFinancialAccount, isLoading: isDeleteLoading } = api.financialAccounts.delete.useMutation({
     onSuccess: () => {
-      setShowDeleteAlert(false);
-      void utils.categories.invalidate();
+      void utils.financialAccounts.invalidate();
       void utils.transactions.invalidate();
+      setShowDeleteAlert(false);
     },
   });
 
@@ -63,14 +63,15 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <UpdateCategoryDialog category={category} open={showUpdateDialog} setOpen={setShowUpdateDialog} />
+      <UpdateFinancialAccountDialog financialAccount={financialAccount} open={showUpdateDialog} setOpen={setShowUpdateDialog} />
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
+              This action cannot be undone. This will permanently delete the account
+              <span className="font-semibold"> {financialAccount.name}</span>.
+              It will also delete all transactions associated with this account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -78,7 +79,7 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
             <AlertDialogAction
               onClick={(event) => {
                 event.preventDefault();
-                deleteCategory({ id: category.id });
+                deleteFinancialAccount({ id: financialAccount.id });
               }}
               className="bg-destructive hover:bg-destructive/80"
             >

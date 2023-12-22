@@ -1,6 +1,7 @@
 import type { Transaction } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
 import React from "react";
+import UpdateTransactionDialog from "~/components/dialogs/update-transaction";
 import { Icons } from "~/components/icons";
 import {
   AlertDialog,
@@ -21,7 +22,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { UpdateTransactionDialog } from "~/components/update-transaction-dialog";
 import { api } from "~/utils/api";
 
 interface DataTableRowActionsProps<TData> {
@@ -40,8 +40,9 @@ export function DataTableRowActions<TData>({
 
   const { mutate: deleteTransaction, isLoading: isDeleteLoading } = api.transactions.delete.useMutation({
     onSuccess: () => {
-      setShowDeleteAlert(false);
       void utils.transactions.invalidate();
+      void utils.financialAccounts.invalidate();
+      setShowDeleteAlert(false);
     },
   });
 

@@ -1,7 +1,7 @@
 import type { Transaction } from "@prisma/client";
 import React from "react";
-import { UpdateTransaction } from "~/components/forms/update-transaction-form";
-import type { UpdateTransactionFormValues } from "~/components/forms/update-transaction-form";
+import { UpdateTransactionForm } from "~/components/forms/update-transaction";
+import type { UpdateTransactionFormValues } from "~/components/forms/update-transaction";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/dialog";
 import { api } from "~/utils/api";
 
-export function UpdateTransactionDialog({
+export default function UpdateTransactionDialog({
   transaction,
   open,
   setOpen,
@@ -27,8 +27,9 @@ export function UpdateTransactionDialog({
 
   const { mutate: updateTransaction, isLoading } = api.transactions.update.useMutation({
     onSuccess: () => {
-      setOpen(false);
       void utils.transactions.invalidate();
+      void utils.financialAccounts.invalidate();
+      setOpen(false);
     },
   });
 
@@ -45,7 +46,11 @@ export function UpdateTransactionDialog({
             Update the transaction details below
           </DialogDescription>
         </DialogHeader>
-        <UpdateTransaction onSubmit={onSubmit} isLoading={isLoading} transaction={transaction} categories={categories} />
+        <UpdateTransactionForm
+          onSubmit={onSubmit}
+          isLoading={isLoading}
+          transaction={transaction} categories={categories}
+        />
       </DialogContent>
     </Dialog>
   );

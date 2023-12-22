@@ -20,7 +20,7 @@ const createCategorySchema = z.object({
 
 export type CreateCategoryFormValues = z.infer<typeof createCategorySchema>;
 
-export function CreateCategory({
+export function CreateCategoryForm({
   onSubmit,
   isLoading,
 }: {

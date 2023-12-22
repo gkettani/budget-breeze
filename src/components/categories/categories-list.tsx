@@ -1,6 +1,6 @@
 import type { Category } from "@prisma/client";
 import { CategoriesActionMenu } from "~/components/categories/categories-action-menu";
-import CreateCategoryDialog from "~/components/create-category-dialog";
+import CreateCategoryDialog from "~/components/dialogs/create-category";
 import { Icons } from "~/components/icons";
 import {
   Card,

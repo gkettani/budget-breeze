@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Category } from '@prisma/client';
+import type { FinancialAccount } from '@prisma/client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -15,25 +15,27 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 
-const updateCategorySchema = z.object({
+const updateFinancialAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
+  balance: z.coerce.number(),
 });
 
-export type UpdateCategoryFormValues = z.infer<typeof updateCategorySchema>;
+export type UpdateFinancialAccountFormValues = z.infer<typeof updateFinancialAccountSchema>;
 
-export function UpdateCategory({
+export function UpdateFinancialAccountForm({
   onSubmit,
   isLoading,
-  category,
+  financialAccount,
 }: {
-  onSubmit: (values: UpdateCategoryFormValues) => void;
+  onSubmit: (values: UpdateFinancialAccountFormValues) => void;
   isLoading: boolean;
-  category: Category;
+  financialAccount: FinancialAccount;
 }) {
-  const form = useForm<UpdateCategoryFormValues>({
-    resolver: zodResolver(updateCategorySchema),
+  const form = useForm<UpdateFinancialAccountFormValues>({
+    resolver: zodResolver(updateFinancialAccountSchema),
     defaultValues: {
-      name: category.name,
+      name: financialAccount.name,
+      balance: financialAccount.balance,
     },
   });
 
@@ -53,11 +55,24 @@ export function UpdateCategory({
             </FormItem>
           )}
         />
-      <Button type="submit" disabled={isLoading} className='w-full'>
+        <FormField
+          control={form.control}
+          name="balance"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Balance</FormLabel>
+              <FormControl>
+                <Input placeholder="Balance" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isLoading} className='w-full'>
           {isLoading && (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           )}
-          Update category
+          Update Account
         </Button>
       </form>
     </Form>

@@ -49,7 +49,10 @@ export const transactionsRouter = createTRPCRouter({
           userId: ctx.session.user.id,
         },
         orderBy: { date: "desc" },
-        include: { category: true },
+        include: {
+          category: true,
+          financialAccount: true,
+        },
       });
 
       return transactions;
@@ -61,19 +64,34 @@ export const transactionsRouter = createTRPCRouter({
       date: z.date(),
       amount: z.number(),
       categoryId: z.string().optional(),
+      financialAccountId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
-      const { description, date, amount, categoryId } = input;
+      const { description, date, amount, categoryId, financialAccountId } = input;
 
-      const transaction = await db.transaction.create({
-        data: {
-          description,
-          date,
-          amount,
-          categoryId,
-          userId: ctx.session.user.id,
-        },
+      const transaction = await db.$transaction(async (tx) => {
+        const transaction = await tx.transaction.create({
+          data: {
+            description,
+            date,
+            amount,
+            categoryId,
+            userId: ctx.session.user.id,
+            financialAccountId,
+          },
+        });
+
+        await tx.financialAccount.update({
+          where: { id: financialAccountId },
+          data: {
+            balance: {
+              increment: amount,
+            },
+          },
+        });
+
+        return transaction;
       });
 
       return transaction;
@@ -91,9 +109,36 @@ export const transactionsRouter = createTRPCRouter({
       const { db } = ctx;
       const { id, ...data } = input;
 
-      const transaction = await db.transaction.update({
+      const oldTransaction = await db.transaction.findUnique({
         where: { id },
-        data,
+      });
+
+      if (!oldTransaction) {
+        throw new Error("Transaction not found");
+      }
+
+      const amountDiff = data.amount - oldTransaction.amount;
+
+      const transaction = await db.$transaction(async (tx) => {
+        const transaction = await tx.transaction.update({
+          where: { id },
+          data: {
+            ...data,
+          },
+        });
+
+        if (amountDiff !== 0) {
+          await tx.financialAccount.update({
+            where: { id: transaction.financialAccountId },
+            data: {
+              balance: {
+                increment: amountDiff,
+              },
+            },
+          });
+
+          return transaction;
+        }
       });
 
       return transaction;
@@ -107,8 +152,28 @@ export const transactionsRouter = createTRPCRouter({
       const { db } = ctx;
       const { id } = input;
 
-      await db.transaction.delete({
+      const transaction = await db.transaction.findUnique({
         where: { id },
+      });
+
+      if (!transaction) {
+        throw new Error("Transaction not found");
+      }
+
+      await db.$transaction(async (tx) => {
+
+        await tx.transaction.delete({
+          where: { id },
+        });
+
+        await tx.financialAccount.update({
+          where: { id: transaction.financialAccountId },
+          data: {
+            balance: {
+              decrement: transaction.amount,
+            },
+          },
+        });
       });
 
       return true;

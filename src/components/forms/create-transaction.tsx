@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Category } from '@prisma/client';
+import type { Category, FinancialAccount } from '@prisma/client';
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -33,24 +33,29 @@ import {
 import { cn } from "~/lib/utils";
 
 const createTransactionSchema = z.object({
-  description: z.string().min(1, { message: 'Description is required' }),
+  description: z.string().min(1, { message: 'You must provide a description' }),
   amount: z.coerce.number(),
   date: z.date({
     required_error: 'Date is required',
   }),
   categoryId: z.string().optional(),
+  financialAccountId: z.string({
+    required_error: 'You must select an account',
+  }),
 });
 
 export type CreateTransactionFormValues = z.infer<typeof createTransactionSchema>;
 
-export function CreateTransaction({
+export function CreateTransactionForm({
   onSubmit,
   isLoading,
   categories,
+  financialAccounts,
 }: {
   onSubmit: (values: CreateTransactionFormValues) => void;
   isLoading: boolean;
   categories: Category[] | undefined;
+  financialAccounts: FinancialAccount[] | undefined;
 }) {
   const form = useForm<CreateTransactionFormValues>({
     resolver: zodResolver(createTransactionSchema),
@@ -121,9 +126,6 @@ export function CreateTransaction({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -153,6 +155,34 @@ export function CreateTransaction({
                       className="text-sm"
                     >
                       {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="financialAccountId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Account</FormLabel>
+              <Select onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an account" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {financialAccounts?.map((financialAccount) => (
+                    <SelectItem
+                      key={financialAccount.id}
+                      value={financialAccount.id}
+                      className="text-sm"
+                    >
+                      {financialAccount.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
