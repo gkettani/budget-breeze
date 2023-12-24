@@ -24,6 +24,7 @@ export default function CreateTransactionDialog() {
     onSuccess: () => {
       void utils.transactions.invalidate();
       void utils.financialAccounts.invalidate();
+      void utils.categories.invalidate();
       setOpen(false);
     },
   });

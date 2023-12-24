@@ -9,6 +9,13 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+  }).format(amount);
+}
+
 export default function CategoriesList({ categories, isLoading }: { categories?: Category[]; isLoading: boolean; }) {
 
   return (
@@ -23,7 +30,8 @@ export default function CategoriesList({ categories, isLoading }: { categories?:
             {categories?.map((category) => (
               <li key={category.id} className="border flex justify-between items-center shadow-sm rounded px-4 py-1">
                 <p>
-                  {category.name}
+                  {category.name} <br />
+                  <span className='text-slate-500'>{formatCurrency(category.budget)}</span>
                 </p>
                 <CategoriesActionMenu category={category} />
               </li>

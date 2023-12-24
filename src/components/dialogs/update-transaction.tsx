@@ -23,12 +23,11 @@ export default function UpdateTransactionDialog({
 
   const utils = api.useContext();
 
-  const { data: categories } = api.categories.list.useQuery();
-
   const { mutate: updateTransaction, isLoading } = api.transactions.update.useMutation({
     onSuccess: () => {
       void utils.transactions.invalidate();
       void utils.financialAccounts.invalidate();
+      void utils.categories.invalidate();
       setOpen(false);
     },
   });
@@ -49,7 +48,7 @@ export default function UpdateTransactionDialog({
         <UpdateTransactionForm
           onSubmit={onSubmit}
           isLoading={isLoading}
-          transaction={transaction} categories={categories}
+          transaction={transaction}
         />
       </DialogContent>
     </Dialog>

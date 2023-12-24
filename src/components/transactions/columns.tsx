@@ -47,7 +47,7 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     cell: ({ row }) => {
       const date = new Date(row.getValue("date"));
-      const formatted = new Intl.DateTimeFormat("en-US", {
+      const formatted = new Intl.DateTimeFormat("fr-FR", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -74,9 +74,9 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
+      const formatted = new Intl.NumberFormat("fr-FR", {
         style: "currency",
-        currency: "USD",
+        currency: "EUR",
       }).format(amount);
 
       return <div className="text-right font-medium pr-5">{formatted}</div>;

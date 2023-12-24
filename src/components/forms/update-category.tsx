@@ -17,6 +17,7 @@ import { Input } from '~/components/ui/input';
 
 const updateCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
+  budget: z.coerce.number(),
 });
 
 export type UpdateCategoryFormValues = z.infer<typeof updateCategorySchema>;
@@ -34,6 +35,7 @@ export function UpdateCategoryForm({
     resolver: zodResolver(updateCategorySchema),
     defaultValues: {
       name: category.name,
+      budget: category.budget,
     },
   });
 
@@ -48,6 +50,19 @@ export function UpdateCategoryForm({
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="budget"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Budget</FormLabel>
+              <FormControl>
+                <Input placeholder="Budget" type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

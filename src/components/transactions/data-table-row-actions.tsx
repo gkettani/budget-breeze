@@ -42,6 +42,7 @@ export function DataTableRowActions<TData>({
     onSuccess: () => {
       void utils.transactions.invalidate();
       void utils.financialAccounts.invalidate();
+      void utils.categories.invalidate();
       setShowDeleteAlert(false);
     },
   });

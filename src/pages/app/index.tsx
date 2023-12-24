@@ -54,6 +54,16 @@ export default function Transactions() {
         <CreateTransactionDialog />
       </div>
       <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
+      {/* Print money to assign */}
+      <p>
+        Money to assign:{" "}
+        {new Intl.NumberFormat("fr-FR", {
+          style: "currency",
+          currency: "EUR",
+        }).format(
+          (financialAccounts?.reduce((acc, account) => acc + account.balance, 0) ?? 0) - (categories?.reduce((acc, category) => acc + category.budget, 0) ?? 0),
+        )}
+      </p>
       <FinancialAccountsList financialAccounts={financialAccounts} isLoading={isFinancialAccountsLoading} />
       <CategoriesList categories={categories} isLoading={isCategoriesLoading} />
       {categoriesWithTotalAmount.length > 0 && (
@@ -66,9 +76,9 @@ export default function Transactions() {
                   {category.name}
                 </p>
                 <p>
-                  {new Intl.NumberFormat("en-US", {
+                  {new Intl.NumberFormat("fr-FR", {
                     style: "currency",
-                    currency: "USD",
+                    currency: "EUR",
                   }).format(category.totalAmount)}
                 </p>
               </li>

@@ -80,8 +80,9 @@ model Category {
   id           String        @id @default(cuid())
   userId       String
   name         String        @unique
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  budget       Float         @default(0)
   transactions Transaction[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }

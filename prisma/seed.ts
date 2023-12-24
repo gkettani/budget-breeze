@@ -1,33 +1,57 @@
 import { faker } from "@faker-js/faker";
-import type { Prisma } from '@prisma/client';
+import type { Transaction, FinancialAccount, Category } from '@prisma/client';
 import { db } from "../src/server/db";
 
-function createRandomTransaction(): Prisma.TransactionCreateInput {
+const USER_ID = 'clqjkimtn0000vefwgczvtltf';
+
+function createRandomTransaction(financialAccounts: FinancialAccount[], categories: Category[]): Omit<Transaction, 'id'> {
   return {
     description: faker.finance.transactionDescription(),
-    amount: Number.parseFloat(faker.finance.amount()),
+    amount: Number.parseFloat(faker.finance.amount(-1000, 1000)),
     date: faker.date.past(),
-    user: {
-      connect: {
-        id: "clnqkt69s0000vea47zc9vsjz",
-      },
-    },
+    financialAccountId: faker.helpers.arrayElement(financialAccounts).id,
+    categoryId: faker.helpers.arrayElement(categories).id,
+    userId: USER_ID,
   };
 }
 
-const transactions: Prisma.TransactionCreateInput[] = faker.helpers.multiple(createRandomTransaction, {
-  count: 25,
+function createRandomFinancialAccount(): FinancialAccount {
+  return {
+    id: faker.string.uuid(),
+    name: faker.finance.accountName().concat(' ', faker.string.alpha(2)),
+    balance: Number.parseFloat(faker.finance.amount(500, 5000)),
+    userId: USER_ID,
+  };
+}
+
+function createRandomCategory(): Category {
+  return {
+    id: faker.string.uuid(),
+    name: 'Category'.concat(' ', faker.string.alpha(5)),
+    budget: Number.parseFloat(faker.finance.amount(100, 1000)),
+    userId: USER_ID,
+  };
+}
+
+const financialAccounts: FinancialAccount[] = faker.helpers.multiple(createRandomFinancialAccount, {
+  count: 5,
+});
+
+const categories: Category[] = faker.helpers.multiple(createRandomCategory, {
+  count: 5,
+});
+
+const transactions: Omit<Transaction, 'id'>[] = faker.helpers.multiple(() => createRandomTransaction(financialAccounts, categories), {
+  count: 1000,
 });
 
 function main() {
   console.log("Seeding transactions...");
-  return Promise.all(
-    transactions.map(async (tsx) => {
-      await db.transaction.create({
-        data: tsx,
-      });
-    }),
-  );
+  return Promise.all([
+    db.financialAccount.createMany({ data: financialAccounts }),
+    db.category.createMany({ data: categories }),
+    db.transaction.createMany({ data: transactions }),
+  ]);
 }
 
 main()

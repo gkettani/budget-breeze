@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Category, Transaction } from "@prisma/client";
+import type { Transaction } from "@prisma/client";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -23,7 +23,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { cn } from "~/lib/utils";
 
 const updateTransactionSchema = z.object({
@@ -32,7 +31,6 @@ const updateTransactionSchema = z.object({
   date: z.date({
     required_error: 'Date is required',
   }),
-  categoryId: z.string().optional(),
 });
 
 export type UpdateTransactionFormValues = z.infer<typeof updateTransactionSchema>;
@@ -41,12 +39,10 @@ export function UpdateTransactionForm({
   onSubmit,
   isLoading,
   transaction,
-  categories,
 }: {
   onSubmit: (values: UpdateTransactionFormValues) => void;
   isLoading: boolean;
   transaction: Transaction;
-  categories: Category[] | undefined;
 }) {
   const form = useForm<UpdateTransactionFormValues>({
     resolver: zodResolver(updateTransactionSchema),
@@ -54,7 +50,6 @@ export function UpdateTransactionForm({
       description: transaction.description,
       amount: transaction.amount,
       date: transaction.date,
-      categoryId: transaction.categoryId ?? "",
     },
   });
 
@@ -126,34 +121,6 @@ export function UpdateTransactionForm({
                   </PopoverContent>
                 </Popover>
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="categoryId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={transaction.categoryId ?? ""}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category for you transaction" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {categories?.map((category) => (
-                    <SelectItem
-                      key={category.id}
-                      value={category.id}
-                      className="text-sm"
-                    >
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

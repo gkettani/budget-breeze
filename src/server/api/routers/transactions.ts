@@ -82,6 +82,17 @@ export const transactionsRouter = createTRPCRouter({
           },
         });
 
+        if (categoryId) {
+          await tx.category.update({
+            where: { id: categoryId },
+            data: {
+              budget: {
+                increment: amount,
+              },
+            },
+          });
+        }
+
         await tx.financialAccount.update({
           where: { id: financialAccountId },
           data: {
@@ -136,9 +147,18 @@ export const transactionsRouter = createTRPCRouter({
               },
             },
           });
-
-          return transaction;
+          if (oldTransaction.categoryId) {
+            await tx.category.update({
+              where: { id: oldTransaction.categoryId },
+              data: {
+                budget: {
+                  increment: amountDiff,
+                },
+              },
+            });
+          }
         }
+        return transaction;
       });
 
       return transaction;
@@ -174,6 +194,17 @@ export const transactionsRouter = createTRPCRouter({
             },
           },
         });
+
+        if (transaction.categoryId) {
+          await tx.category.update({
+            where: { id: transaction.categoryId },
+            data: {
+              budget: {
+                decrement: transaction.amount,
+              },
+            },
+          });
+        }
       });
 
       return true;
