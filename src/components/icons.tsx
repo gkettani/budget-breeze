@@ -13,6 +13,9 @@ import {
   Trash,
   Plus,
   Folder,
+  MoveRight,
+  PieChart,
+  AlignJustify,
 } from 'lucide-react';
 
 type IconProps = React.HTMLAttributes<SVGElement>
@@ -53,4 +56,7 @@ export const Icons = {
   trash: (props: IconProps) => <Trash {...props} />,
   plus: (props: IconProps) => <Plus {...props} />,
   folder: (props: IconProps) => <Folder {...props} />,
+  moveRight: (props: IconProps) => <MoveRight {...props} />,
+  pieChart: (props: IconProps) => <PieChart {...props} />,
+  alignJustify: (props: IconProps) => <AlignJustify {...props} />,
 };

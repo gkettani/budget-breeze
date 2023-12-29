@@ -21,7 +21,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           font-family: ${fontSans.style.fontFamily};
         }
       `}</style>
-      <main className="min-h-screen antialiased">
+      <main>
         <SessionProvider session={session}>
           <Component {...pageProps} />
         </SessionProvider>
