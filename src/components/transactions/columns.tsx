@@ -1,4 +1,4 @@
-import type { Category, Transaction } from '@prisma/client';
+import type { Category, Transaction, FinancialAccount } from '@prisma/client';
 import type { ColumnDef } from "@tanstack/react-table";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
@@ -92,6 +92,14 @@ export const columns: ColumnDef<Transaction>[] = [
     filterFn: (row, id, value: string) => {
       const category: Category = row.getValue(id);
       return value.includes(category?.name ?? 'uncategorized');
+    },
+  },
+  {
+    accessorKey: "financialAccount",
+    header: () => <div className="text-center">Account</div>,
+    cell: ({ row }) => {
+      const account: FinancialAccount = row.getValue("financialAccount");
+      return <div className="text-center">{account?.name}</div>;
     },
   },
   {

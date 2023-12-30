@@ -18,6 +18,7 @@ import { Input } from '~/components/ui/input';
 const updateCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   budget: z.coerce.number(),
+  target: z.coerce.number(),
 });
 
 export type UpdateCategoryFormValues = z.infer<typeof updateCategorySchema>;
@@ -36,6 +37,7 @@ export function UpdateCategoryForm({
     defaultValues: {
       name: category.name,
       budget: category.budget,
+      target: category.target,
     },
   });
 
@@ -63,6 +65,19 @@ export function UpdateCategoryForm({
               <FormLabel>Budget</FormLabel>
               <FormControl>
                 <Input placeholder="Budget" type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="target"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Target</FormLabel>
+              <FormControl>
+                <Input placeholder="Target" type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

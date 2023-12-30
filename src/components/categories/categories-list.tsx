@@ -31,7 +31,8 @@ export default function CategoriesList({ categories, isLoading }: { categories?:
               <li key={category.id} className="border flex justify-between items-center shadow-sm rounded px-4 py-1">
                 <p>
                   {category.name} <br />
-                  <span className='text-slate-500'>{formatCurrency(category.budget)}</span>
+                  <span className='text-slate-500'>Budget: {formatCurrency(category.budget)}</span><br />
+                  <span className='text-slate-500'>Target: {formatCurrency(category.target)}</span>
                 </p>
                 <CategoriesActionMenu category={category} />
               </li>

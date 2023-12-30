@@ -16,7 +16,6 @@ import { Input } from '~/components/ui/input';
 
 const createCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  budget: z.coerce.number(),
 });
 
 export type CreateCategoryFormValues = z.infer<typeof createCategorySchema>;
@@ -32,7 +31,6 @@ export function CreateCategoryForm({
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
       name: '',
-      budget: 0,
     },
   });
 
@@ -47,19 +45,6 @@ export function CreateCategoryForm({
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="budget"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Budget</FormLabel>
-              <FormControl>
-                <Input placeholder="Budget" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
