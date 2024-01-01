@@ -23,6 +23,7 @@ export const api = createTRPCNext<AppRouter>({
     return {
       queryClientConfig: {
         defaultOptions: {
+          staleTime: 1000 * 60 * 5,
           queries: {
             retry: (failureCount, error) => {
               if (error instanceof TRPCClientError) {

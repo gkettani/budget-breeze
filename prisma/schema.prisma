@@ -79,7 +79,7 @@ model Transaction {
 model Category {
   id           String        @id @default(cuid())
   userId       String
-  name         String        @unique
+  name         String
   budget       Float         @default(0)
   target       Float         @default(0)
   transactions Transaction[]
@@ -91,7 +91,7 @@ model Category {
 model FinancialAccount {
   id           String        @id @default(cuid())
   userId       String
-  name         String        @unique
+  name         String
   balance      Float
   transactions Transaction[]
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)

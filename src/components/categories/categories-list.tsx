@@ -1,45 +1,56 @@
-import type { Category } from "@prisma/client";
+import { Card, Metric, Text, Flex, ProgressBar, Grid } from "@tremor/react";
 import { CategoriesActionMenu } from "~/components/categories/categories-action-menu";
 import CreateCategoryDialog from "~/components/dialogs/create-category";
 import { Icons } from "~/components/icons";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { cn } from "~/lib/utils";
+import { type RouterOutputs } from "~/utils/api";
+import { formatCurrency } from "~/utils/helpers";
 
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
-}
+type EnrichedCategory = RouterOutputs["categories"]["list"][0];
 
-export default function CategoriesList({ categories, isLoading }: { categories?: Category[]; isLoading: boolean; }) {
+export default function CategoriesList({
+  categories,
+  isLoading,
+  className,
+}: {
+  categories?: EnrichedCategory[];
+  isLoading: boolean;
+  className?: string;
+}) {
 
   return (
-    <Card className="w-[350px] mt-10">
-      <CardHeader className=" flex-row justify-between items-center">
-        <CardTitle className="text-xl">Categories</CardTitle>
+    <div className={cn("", className)}>
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="font-bold text-2xl">Categories</h2>
+        </div>
         <CreateCategoryDialog />
-      </CardHeader>
-      <CardContent>
+      </div>
+      <Grid numItemsSm={2} numItemsMd={3} numItemsLg={4} className="gap-6 mt-4">
         {(!isLoading && categories?.length) ? (
-          <ul className="space-y-4">
-            {categories?.map((category) => (
-              <li key={category.id} className="border flex justify-between items-center shadow-sm rounded px-4 py-1">
-                <p>
-                  {category.name} <br />
-                  <span className='text-slate-500'>Budget: {formatCurrency(category.budget)}</span><br />
-                  <span className='text-slate-500'>Target: {formatCurrency(category.target)}</span>
-                </p>
-                <CategoriesActionMenu category={category} />
-              </li>
-            ))}
-          </ul>
+          categories
+            .map((item) => (
+              <Card key={item.id}>
+                <Flex className="">
+                  <Text>{item.name}</Text>
+                  <CategoriesActionMenu category={item} />
+                </Flex>
+                <Metric>{formatCurrency(item.budget)}</Metric>
+                <Flex className="mt-4">
+                  <Text className="truncate">{`${item.monthExpensePercentage.toFixed(2)}% • ${formatCurrency(item.monthExpenseTotal)}`}</Text>
+                  <Text>{formatCurrency(item.target)}</Text>
+                </Flex>
+                <ProgressBar
+                  className="mt-2"
+                  value={item.monthExpensePercentage}
+                  color={item.monthExpensePercentage > 100 ? "red" : "blue"}
+                  // color gradient from green to red using the percent value
+                  // color={`hsl(${(1 - item.percent) * 120}, 100%, 50%)`}
+                />
+              </Card>
+            ))
         ) : (
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center col-span-full">
             {isLoading ? (
               <Icons.spinner className="h-6 w-6 text-primary animate-spin" />
             ) : (
@@ -50,7 +61,7 @@ export default function CategoriesList({ categories, isLoading }: { categories?:
             )}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </Grid>
+    </div>
   );
 }

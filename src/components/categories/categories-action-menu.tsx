@@ -41,9 +41,9 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
     <div className="text-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className="h-8 w-8 p-0 rounded-full">
             <span className="sr-only">Open menu</span>
-            <Icons.moreHorizontal className="h-4 w-4" />
+            <Icons.moreVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -69,8 +69,9 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
+              This action cannot be undone. This will permanently delete the category{" "}
+              <span className="font-medium">{category.name}</span>.<br />
+              All the related transactions will be uncategorized.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

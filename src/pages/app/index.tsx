@@ -1,91 +1,73 @@
+import { Card, Grid, Text, Metric } from "@tremor/react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import React from "react";
 import CategoriesList from "~/components/categories/categories-list";
 import CreateTransactionDialog from "~/components/dialogs/create-transaction";
 import FinancialAccountsList from "~/components/financial-accounts/financial-accounts-list";
+import { Icons } from "~/components/icons";
 import { columns } from "~/components/transactions/columns";
 import { DataTable } from "~/components/transactions/data-table";
+import { UserAccountNav } from "~/components/user-account-nav";
 import { api } from "~/utils/api";
+import { formatCurrency } from "~/utils/helpers";
 
-export default function Transactions() {
+export default function App() {
   const { data: transactions, isLoading: isTransactionsLoading } = api.transactions.list.useQuery();
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.list.useQuery();
   const { data: financialAccounts, isLoading: isFinancialAccountsLoading } = api.financialAccounts.list.useQuery();
 
-  // calculate the total amount of all transactions for each category
-  const categoriesWithTotalAmount = React.useMemo(() => {
-    if (!transactions || !categories) return [];
+  const assignedMoney = categories?.reduce((acc, category) => acc + category.budget, 0) ?? 0;
+  const totalMoney = financialAccounts?.reduce((acc, account) => acc + account.balance, 0) ?? 0;
 
-    const res = categories
-      .map((category) => {
-        const totalAmount = transactions.reduce((acc, transaction) => {
-          if (transaction.categoryId === category.id) {
-            return acc + transaction.amount;
-          }
-          return acc;
-        }, 0);
+  const metrics = [
+    { title: "Total money", metric: formatCurrency(totalMoney) },
+    { title: "Assigned money", metric: formatCurrency(assignedMoney) },
+    { title: "Unassigned money", metric: formatCurrency(totalMoney - assignedMoney) },
+  ];
 
-        return {
-          id: category.id,
-          name: category.name,
-          totalAmount,
-        };
-      });
-
-    res.push({
-      id: '',
-      name: 'Uncategorized',
-      totalAmount: transactions.reduce((acc, transaction) => {
-        if (!transaction.categoryId) {
-          return acc + transaction.amount;
-        }
-        return acc;
-      }, 0),
-    });
-
-    return res;
-  }, [transactions, categories]);
+  const { data: session } = useSession();
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="font-bold text-2xl">Transactions</h2>
+    <div>
+      <header className="sticky top-0 z-40 border-b bg-background">
+        <div className="container flex h-16 items-center justify-between py-4">
+          <div>
+            <Link href="/" className="hidden items-center space-x-2 md:flex">
+              <Icons.logo />
+              <span className="hidden font-bold sm:inline-block">
+                Budget Breeze
+              </span>
+            </Link>
+          </div>
+          <UserAccountNav
+            user={{
+              name: session?.user?.name ?? "",
+              image: session?.user?.image ?? "",
+              email: session?.user?.email ?? "",
+            }}
+          />
         </div>
-        <CreateTransactionDialog />
+      </header>
+      <div className="container mx-auto py-10">
+        <Grid numItemsSm={2} numItemsLg={3} className="gap-6 mb-5">
+          {metrics.map((item) => (
+            <Card key={item.title}>
+              <Text>{item.title}</Text>
+              <Metric>{item.metric}</Metric>
+            </Card>
+          ))}
+        </Grid>
+        <CategoriesList className="mb-10" categories={categories} isLoading={isCategoriesLoading} />
+        <FinancialAccountsList financialAccounts={financialAccounts} isLoading={isFinancialAccountsLoading} />
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="font-bold text-2xl">Transactions</h2>
+          </div>
+          <CreateTransactionDialog />
+        </div>
+        <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
       </div>
-      <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
-      {/* Print money to assign */}
-      <p>
-        Money to assign:{" "}
-        {new Intl.NumberFormat("fr-FR", {
-          style: "currency",
-          currency: "EUR",
-        }).format(
-          (financialAccounts?.reduce((acc, account) => acc + account.balance, 0) ?? 0) - (categories?.reduce((acc, category) => acc + category.budget, 0) ?? 0),
-        )}
-      </p>
-      <FinancialAccountsList financialAccounts={financialAccounts} isLoading={isFinancialAccountsLoading} />
-      <CategoriesList categories={categories} isLoading={isCategoriesLoading} />
-      {categoriesWithTotalAmount.length > 0 && (
-        <div className="mt-10 w-[350px]">
-          <h3 className="font-bold text-xl">Categories Statistics</h3>
-          <ul className="mt-4 space-y-4">
-            {categoriesWithTotalAmount.map((category) => (
-              <li key={category.id} className="border flex justify-between items-center shadow-sm rounded px-4 py-1">
-                <p>
-                  {category.name}
-                </p>
-                <p>
-                  {new Intl.NumberFormat("fr-FR", {
-                    style: "currency",
-                    currency: "EUR",
-                  }).format(category.totalAmount)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }

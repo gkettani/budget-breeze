@@ -13,7 +13,30 @@ export const categoriesRouter = createTRPCRouter({
         orderBy: { name: "asc" },
       });
 
-      return categories;
+      // get current month's transactions
+      const transactions = await db.transaction.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          date: {
+            gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          },
+          amount: {
+            lt: 0,
+          },
+        },
+      });
+
+      return categories.map((category) => {
+        const total = transactions
+          .filter((transaction) => transaction.categoryId === category.id)
+          .reduce((acc, transaction) => acc - transaction.amount, 0);
+
+        return {
+          ...category,
+          monthExpenseTotal: total,
+          monthExpensePercentage: category.target ? total*100 / category.target : 0,
+        };
+      });
     }),
 
   create: protectedProcedure

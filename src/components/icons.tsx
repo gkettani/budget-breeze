@@ -16,6 +16,8 @@ import {
   MoveRight,
   PieChart,
   AlignJustify,
+  User,
+  Wallet2,
 } from 'lucide-react';
 
 type IconProps = React.HTMLAttributes<SVGElement>
@@ -29,11 +31,7 @@ export const Icons = {
   chevronsUpDown: (props: IconProps) => <ChevronsUpDown {...props} />,
   moreVertical: (props: IconProps) => <MoreVertical {...props} />,
   moreHorizontal: (props: IconProps) => <MoreHorizontal {...props} />,
-  logo: (props: IconProps) => (
-    <svg width="93" height="83" viewBox="0 0 93 83" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-
-    </svg>
-  ),
+  logo: Wallet2,
   mail: (props: IconProps) => <Mail {...props} />,
   spinner: (props: IconProps) => (
     <svg
@@ -59,4 +57,5 @@ export const Icons = {
   moveRight: (props: IconProps) => <MoveRight {...props} />,
   pieChart: (props: IconProps) => <PieChart {...props} />,
   alignJustify: (props: IconProps) => <AlignJustify {...props} />,
+  user: (props: IconProps) => <User {...props} />,
 };

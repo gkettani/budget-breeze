@@ -8,18 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
-}
+import { formatCurrency } from "~/utils/helpers";
 
 export default function FinancialAccountsList({ financialAccounts, isLoading }: { financialAccounts?: FinancialAccount[]; isLoading: boolean; }) {
 
   return (
-    <Card className="w-[350px] mt-10">
+    <Card className="w-[350px] my-10">
       <CardHeader className=" flex-row justify-between items-center">
         <CardTitle className="text-xl">Accounts</CardTitle>
         <CreateFinancialAccountDialog />

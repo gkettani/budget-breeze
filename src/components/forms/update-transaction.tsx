@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Transaction } from "@prisma/client";
+import type { Category, Transaction } from "@prisma/client";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -23,14 +23,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { cn } from "~/lib/utils";
 
 const updateTransactionSchema = z.object({
   description: z.string().min(1, { message: 'Description is required' }),
-  amount: z.coerce.number(),
   date: z.date({
     required_error: 'Date is required',
   }),
+  categoryId: z.string().optional().transform((val) => (val === 'clear_selection' ? '' : val)),
 });
 
 export type UpdateTransactionFormValues = z.infer<typeof updateTransactionSchema>;
@@ -39,16 +46,18 @@ export function UpdateTransactionForm({
   onSubmit,
   isLoading,
   transaction,
+  categories,
 }: {
   onSubmit: (values: UpdateTransactionFormValues) => void;
   isLoading: boolean;
   transaction: Transaction;
+  categories: Category[] | undefined;
 }) {
   const form = useForm<UpdateTransactionFormValues>({
     resolver: zodResolver(updateTransactionSchema),
     defaultValues: {
       description: transaction.description,
-      amount: transaction.amount,
+      categoryId: transaction.categoryId ?? '',
       date: transaction.date,
     },
   });
@@ -64,19 +73,6 @@ export function UpdateTransactionForm({
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input placeholder="Description" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="Amount" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -121,6 +117,41 @@ export function UpdateTransactionForm({
                   </PopoverContent>
                 </Popover>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={transaction.categoryId ?? ""}
+                value={(field.value === "clear_selection" ? "" : field.value)}
+                >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category for you transaction" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="clear_selection" className="text-sm">
+                    No category
+                  </SelectItem>
+                  {categories?.map((category) => (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id}
+                      className="text-sm"
+                    >
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

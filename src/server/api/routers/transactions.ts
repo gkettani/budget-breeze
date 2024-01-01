@@ -113,8 +113,7 @@ export const transactionsRouter = createTRPCRouter({
       id: z.string(),
       description: z.string(),
       date: z.date(),
-      amount: z.number(),
-      categoryId: z.string().optional(),
+      categoryId: z.string().nullable().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
@@ -128,36 +127,34 @@ export const transactionsRouter = createTRPCRouter({
         throw new Error("Transaction not found");
       }
 
-      const amountDiff = data.amount - oldTransaction.amount;
-
       const transaction = await db.$transaction(async (tx) => {
         const transaction = await tx.transaction.update({
           where: { id },
-          data: {
-            ...data,
-          },
+          data,
         });
 
-        if (amountDiff !== 0) {
-          await tx.financialAccount.update({
-            where: { id: transaction.financialAccountId },
+        if (oldTransaction.categoryId) {
+          await tx.category.update({
+            where: { id: oldTransaction.categoryId },
             data: {
-              balance: {
-                increment: amountDiff,
+              budget: {
+                decrement: oldTransaction.amount,
               },
             },
           });
-          if (oldTransaction.categoryId) {
-            await tx.category.update({
-              where: { id: oldTransaction.categoryId },
-              data: {
-                budget: {
-                  increment: amountDiff,
-                },
-              },
-            });
-          }
         }
+
+        if (transaction.categoryId) {
+          await tx.category.update({
+            where: { id: transaction.categoryId },
+            data: {
+              budget: {
+                increment: transaction.amount,
+              },
+            },
+          });
+        }
+
         return transaction;
       });
 

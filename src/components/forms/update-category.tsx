@@ -18,7 +18,7 @@ import { Input } from '~/components/ui/input';
 const updateCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   budget: z.coerce.number(),
-  target: z.coerce.number(),
+  target: z.coerce.number().gte(0),
 });
 
 export type UpdateCategoryFormValues = z.infer<typeof updateCategorySchema>;
