@@ -4,7 +4,7 @@ import { db } from "../src/server/db";
 
 const USER_ID = 'clqjkimtn0000vefwgczvtltf';
 
-function createRandomTransaction(financialAccounts: FinancialAccount[], categories: Category[]): Omit<Transaction, 'id'> {
+function createRandomTransaction(financialAccounts: FinancialAccount[], categories: Omit<Category, "target">[]): Omit<Transaction, 'id'> {
   return {
     description: faker.finance.transactionDescription(),
     amount: Number.parseFloat(faker.finance.amount(-1000, 1000)),
@@ -24,7 +24,7 @@ function createRandomFinancialAccount(): FinancialAccount {
   };
 }
 
-function createRandomCategory(): Category {
+function createRandomCategory(): Omit<Category, "target"> {
   return {
     id: faker.string.uuid(),
     name: 'Category'.concat(' ', faker.string.alpha(5)),
@@ -37,7 +37,7 @@ const financialAccounts: FinancialAccount[] = faker.helpers.multiple(createRando
   count: 5,
 });
 
-const categories: Category[] = faker.helpers.multiple(createRandomCategory, {
+const categories: Omit<Category, "target">[] = faker.helpers.multiple(createRandomCategory, {
   count: 5,
 });
 
