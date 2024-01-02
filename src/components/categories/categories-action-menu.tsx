@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 export function CategoriesActionMenu({ category }: { category: Category }) {
@@ -34,6 +35,13 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
       setShowDeleteAlert(false);
       void utils.categories.invalidate();
       void utils.transactions.invalidate();
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la suppression de la catégorie',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 

@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 export default function CreateFinancialAccountDialog() {
@@ -20,6 +21,13 @@ export default function CreateFinancialAccountDialog() {
     onSuccess: () => {
       void utils.financialAccounts.invalidate();
       setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la creation du compte',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 

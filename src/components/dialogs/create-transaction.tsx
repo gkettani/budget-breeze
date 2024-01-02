@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 export default function CreateTransactionDialog() {
@@ -26,6 +27,13 @@ export default function CreateTransactionDialog() {
       void utils.financialAccounts.invalidate();
       void utils.categories.invalidate();
       setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la creation de la transaction',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 

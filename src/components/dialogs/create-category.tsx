@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 export default function CreateCategoryDialog() {
@@ -20,6 +21,13 @@ export default function CreateCategoryDialog() {
     onSuccess: () => {
       void utils.categories.invalidate();
       setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la création de la catégorie',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 

@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 export default function UpdateCategoryDialog({
@@ -27,6 +28,13 @@ export default function UpdateCategoryDialog({
       void utils.categories.invalidate();
       void utils.transactions.invalidate();
       setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la mise à jour de la catégorie',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 

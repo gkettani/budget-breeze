@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 export default function UpdateFinancialAccountDialog({
@@ -26,6 +27,13 @@ export default function UpdateFinancialAccountDialog({
     onSuccess: () => {
       void utils.financialAccounts.invalidate();
       setOpen(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la mise à jour du compte',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 

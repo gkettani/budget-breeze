@@ -8,6 +8,7 @@ import FinancialAccountsList from "~/components/financial-accounts/financial-acc
 import { Icons } from "~/components/icons";
 import { columns } from "~/components/transactions/columns";
 import { DataTable } from "~/components/transactions/data-table";
+import { Toaster } from "~/components/ui/toaster";
 import { UserAccountNav } from "~/components/user-account-nav";
 import { api } from "~/utils/api";
 import { formatCurrency } from "~/utils/helpers";
@@ -68,6 +69,7 @@ export default function App() {
         </div>
         <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
       </div>
+      <Toaster />
     </div>
   );
 }

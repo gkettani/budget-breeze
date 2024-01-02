@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 export function FinancialAccountsActionMenu({ financialAccount }: { financialAccount: FinancialAccount }) {
@@ -34,6 +35,13 @@ export function FinancialAccountsActionMenu({ financialAccount }: { financialAcc
       void utils.financialAccounts.invalidate();
       void utils.transactions.invalidate();
       setShowDeleteAlert(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la suppression du compte',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 

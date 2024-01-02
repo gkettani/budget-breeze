@@ -22,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
 
 interface DataTableRowActionsProps<TData> {
@@ -44,6 +45,13 @@ export function DataTableRowActions<TData>({
       void utils.financialAccounts.invalidate();
       void utils.categories.invalidate();
       setShowDeleteAlert(false);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Échec de la suppression de la transaction',
+        variant: 'destructive',
+        description: error.message || 'Une erreur est survenue',
+      });
     },
   });
 
