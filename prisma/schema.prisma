@@ -63,7 +63,7 @@ model Transaction {
   id                 String           @id @default(cuid())
   userId             String
   description        String
-  amount             Float
+  amount             Decimal
   date               DateTime
   categoryId         String?
   category           Category?        @relation(fields: [categoryId], references: [id])
@@ -80,8 +80,8 @@ model Category {
   id           String        @id @default(cuid())
   userId       String
   name         String
-  budget       Float         @default(0)
-  target       Float         @default(0)
+  budget       Decimal       @default(0)
+  target       Decimal       @default(0)
   transactions Transaction[]
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -92,7 +92,7 @@ model FinancialAccount {
   id           String        @id @default(cuid())
   userId       String
   name         String
-  balance      Float
+  balance      Decimal
   transactions Transaction[]
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 

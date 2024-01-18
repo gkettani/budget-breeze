@@ -18,8 +18,8 @@ export default function App() {
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.list.useQuery();
   const { data: financialAccounts, isLoading: isFinancialAccountsLoading } = api.financialAccounts.list.useQuery();
 
-  const assignedMoney = categories?.reduce((acc, category) => acc + category.budget, 0) ?? 0;
-  const totalMoney = financialAccounts?.reduce((acc, account) => acc + account.balance, 0) ?? 0;
+  const assignedMoney = categories?.reduce((acc, category) => acc + Number(category.budget), 0) ?? 0;
+  const totalMoney = financialAccounts?.reduce((acc, account) => acc + Number(account.balance), 0) ?? 0;
 
   const metrics = [
     { title: "Total money", metric: formatCurrency(totalMoney) },
