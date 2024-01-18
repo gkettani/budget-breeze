@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { Transaction, FinancialAccount, Category } from '@prisma/client';
+import { type Transaction, type FinancialAccount, type Category, Prisma } from '@prisma/client';
 import { db } from "../src/server/db";
 
 const USER_ID = 'clqjkimtn0000vefwgczvtltf';
@@ -7,7 +7,7 @@ const USER_ID = 'clqjkimtn0000vefwgczvtltf';
 function createRandomTransaction(financialAccounts: FinancialAccount[], categories: Omit<Category, "target">[]): Omit<Transaction, 'id'> {
   return {
     description: faker.finance.transactionDescription(),
-    amount: Number.parseFloat(faker.finance.amount(-1000, 1000)),
+    amount: new Prisma.Decimal(faker.finance.amount(-1000, 1000)),
     date: faker.date.past(),
     financialAccountId: faker.helpers.arrayElement(financialAccounts).id,
     categoryId: faker.helpers.arrayElement(categories).id,
@@ -19,7 +19,7 @@ function createRandomFinancialAccount(): FinancialAccount {
   return {
     id: faker.string.uuid(),
     name: faker.finance.accountName().concat(' ', faker.string.alpha(2)),
-    balance: Number.parseFloat(faker.finance.amount(500, 5000)),
+    balance: new Prisma.Decimal(faker.finance.amount(500, 5000)),
     userId: USER_ID,
   };
 }
@@ -28,7 +28,7 @@ function createRandomCategory(): Omit<Category, "target"> {
   return {
     id: faker.string.uuid(),
     name: 'Category'.concat(' ', faker.string.alpha(5)),
-    budget: Number.parseFloat(faker.finance.amount(100, 1000)),
+    budget: new Prisma.Decimal(faker.finance.amount(100, 1000)),
     userId: USER_ID,
   };
 }
