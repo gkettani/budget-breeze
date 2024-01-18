@@ -35,7 +35,7 @@ export function UpdateFinancialAccountForm({
     resolver: zodResolver(updateFinancialAccountSchema),
     defaultValues: {
       name: financialAccount.name,
-      balance: financialAccount.balance,
+      balance: Number(financialAccount.balance),
     },
   });
 

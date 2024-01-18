@@ -29,12 +29,12 @@ export const categoriesRouter = createTRPCRouter({
       return categories.map((category) => {
         const total = transactions
           .filter((transaction) => transaction.categoryId === category.id)
-          .reduce((acc, transaction) => acc - transaction.amount, 0);
+          .reduce((acc, transaction) => acc - Number(transaction.amount), 0);
 
         return {
           ...category,
           monthExpenseTotal: total,
-          monthExpensePercentage: category.target ? total*100 / category.target : 0,
+          monthExpensePercentage: category.target ? total*100 / Number(category.target) : 0,
         };
       });
     }),

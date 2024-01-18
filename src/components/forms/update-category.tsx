@@ -36,8 +36,8 @@ export function UpdateCategoryForm({
     resolver: zodResolver(updateCategorySchema),
     defaultValues: {
       name: category.name,
-      budget: category.budget,
-      target: category.target,
+      budget: Number(category.budget),
+      target: Number(category.target),
     },
   });
 
