@@ -34,7 +34,7 @@ export const categoriesRouter = createTRPCRouter({
         return {
           ...category,
           monthExpenseTotal: total,
-          monthExpensePercentage: category.target ? total*100 / Number(category.target) : 0,
+          monthExpensePercentage: Number(category.target) ? total*100 / Number(category.target) : 0,
         };
       });
     }),
