@@ -19,11 +19,12 @@ export default function App() {
   const { data: financialAccounts, isLoading: isFinancialAccountsLoading } = api.financialAccounts.list.useQuery();
 
   const assignedMoney = categories?.reduce((acc, category) => acc + Number(category.budget), 0) ?? 0;
+  const monthTotalExpenses = categories?.reduce((acc, category) => acc + Number(category.monthExpenseTotal), 0) ?? 0;
   const totalMoney = financialAccounts?.reduce((acc, account) => acc + Number(account.balance), 0) ?? 0;
 
   const metrics = [
-    { title: "Total money", metric: formatCurrency(totalMoney) },
-    { title: "Assigned money", metric: formatCurrency(assignedMoney) },
+    { title: "Wallet Balance", metric: formatCurrency(totalMoney) },
+    { title: "Current Month Spending", metric: formatCurrency(monthTotalExpenses) },
     { title: "Unassigned money", metric: formatCurrency(totalMoney - assignedMoney) },
   ];
 
