@@ -62,7 +62,7 @@ export function UpdateFinancialAccountForm({
             <FormItem>
               <FormLabel>Balance</FormLabel>
               <FormControl>
-                <Input placeholder="Balance" {...field} />
+                <Input placeholder="Balance" type="number" step="0.01" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

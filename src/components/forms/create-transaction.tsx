@@ -89,7 +89,7 @@ export function CreateTransactionForm({
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Amount" {...field} />
+                <Input type="number" placeholder="Amount" step="0.01" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

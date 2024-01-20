@@ -64,7 +64,7 @@ export function UpdateCategoryForm({
             <FormItem>
               <FormLabel>Budget</FormLabel>
               <FormControl>
-                <Input placeholder="Budget" type="number" {...field} />
+                <Input placeholder="Budget" type="number" step="0.01" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,7 +77,7 @@ export function UpdateCategoryForm({
             <FormItem>
               <FormLabel>Target</FormLabel>
               <FormControl>
-                <Input placeholder="Target" type="number" {...field} />
+                <Input placeholder="Target" type="number" step="0.01" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
