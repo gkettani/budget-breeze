@@ -1,6 +1,7 @@
 import type { Category } from "@prisma/client";
 import React from "react";
 import UpdateCategoryDialog from "~/components/dialogs/update-category";
+import UpdateCategoryBudgetDialog from "~/components/dialogs/update-category-budget";
 import { Icons } from "~/components/icons";
 import {
   AlertDialog,
@@ -27,6 +28,7 @@ import { api } from "~/utils/api";
 export function CategoriesActionMenu({ category }: { category: Category }) {
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
   const [showUpdateDialog, setShowUpdateDialog] = React.useState<boolean>(false);
+  const [showUpdateBudgetDialog, setShowUpdateBudgetDialog] = React.useState<boolean>(false);
 
   const utils = api.useContext();
 
@@ -59,6 +61,12 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex cursor-pointer items-center"
+            onSelect={() => setShowUpdateBudgetDialog(true)}
+          >
+            Assign / Unassign
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="flex cursor-pointer items-center"
             onSelect={() => setShowUpdateDialog(true)}
           >
             Edit
@@ -72,6 +80,7 @@ export function CategoriesActionMenu({ category }: { category: Category }) {
         </DropdownMenuContent>
       </DropdownMenu>
       <UpdateCategoryDialog category={category} open={showUpdateDialog} setOpen={setShowUpdateDialog} />
+      <UpdateCategoryBudgetDialog category={category} open={showUpdateBudgetDialog} setOpen={setShowUpdateBudgetDialog} />
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
