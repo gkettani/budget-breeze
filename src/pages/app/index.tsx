@@ -25,7 +25,7 @@ export default function App() {
   const metrics = [
     { title: "Wallet Balance", metric: formatCurrency(totalMoney) },
     { title: "Current Month Spending", metric: formatCurrency(monthTotalExpenses) },
-    { title: "Unassigned money", metric: formatCurrency(totalMoney - assignedMoney) },
+    { title: "To Assign", metric: formatCurrency(totalMoney - assignedMoney) },
   ];
 
   const { data: session } = useSession();
