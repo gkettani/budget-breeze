@@ -9,6 +9,7 @@ import {
 import type { ColumnDef, SortingState, ColumnFiltersState } from "@tanstack/react-table";
 import * as React from "react";
 import { Icons } from "~/components/icons";
+import { DataTableDateFilter } from "~/components/transactions/data-table-date-filter";
 import { DataTableFacetedFilter } from "~/components/transactions/data-table-faceted-filter";
 import { DataTablePagination } from "~/components/transactions/data-table-pagination";
 import { Input } from "~/components/ui/input";
@@ -74,6 +75,7 @@ export function DataTable<TData, TValue>({
             options={categories ?? []}
           />
         )}
+        <DataTableDateFilter column={table.getColumn("date")} />
       </div>
       <div className="rounded-md border">
         <Table>

@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
+import type { DateRange } from "~/types";
 import { DataTableRowActions } from "./data-table-row-actions";
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -54,6 +55,15 @@ export const columns: ColumnDef<Transaction>[] = [
       }).format(date);
 
       return <div>{formatted}</div>;
+    },
+    filterFn: (row, id, value: Partial<DateRange> | undefined) => {
+      if (!value || (!value.from && !value.to)) return true;
+
+      const date = new Date(row.getValue(id));
+      const fromDate = value.from ? value.from : new Date(0); // Default to the beginning of time
+      const toDate = value.to ? value.to : new Date(); // Default to current date
+
+      return date >= fromDate && date <= toDate;
     },
   },
   {

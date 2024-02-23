@@ -38,3 +38,8 @@ export type SiteConfig = {
 export type MarketingConfig = {
   mainNav: MainNavItem[]
 }
+
+export type DateRange = {
+  from: Date;
+  to: Date;
+};
