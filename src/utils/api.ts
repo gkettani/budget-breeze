@@ -28,7 +28,7 @@ export const api = createTRPCNext<AppRouter>({
             retry: (failureCount, error) => {
               if (error instanceof TRPCClientError) {
                 if (error.message === 'UNAUTHORIZED') {
-                  void Router.push('/');
+                  void Router.push(`/login?callbackUrl=${Router.asPath}`);
                 }
               }
               return failureCount < 3;
