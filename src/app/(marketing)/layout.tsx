@@ -21,8 +21,8 @@ export default function MarketingLayout({
             <Link
               href="/login"
               className={cn(
-                buttonVariants({ variant: "ghost" }),
-                "px-4 hidden",
+                buttonVariants({ variant: "outline" }),
+                "px-4",
               )}
             >
               Login
@@ -31,7 +31,7 @@ export default function MarketingLayout({
               href="/login"
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "px-4 hidden",
+                "px-4",
               )}
             >
               Start Free Trial

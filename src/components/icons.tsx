@@ -17,11 +17,11 @@ import {
   PieChart,
   AlignJustify,
   User,
-  Wallet2,
   SunMedium,
   Moon,
   Laptop,
 } from 'lucide-react';
+import Image from 'next/image';
 
 type IconProps = React.HTMLAttributes<SVGElement>
 
@@ -34,7 +34,7 @@ export const Icons = {
   chevronsUpDown: (props: IconProps) => <ChevronsUpDown {...props} />,
   moreVertical: (props: IconProps) => <MoreVertical {...props} />,
   moreHorizontal: (props: IconProps) => <MoreHorizontal {...props} />,
-  logo: Wallet2,
+  logo: (props: IconProps) => <Image src="/assets/logo.png" alt="Logo" width={32} height={32} className={props.className} />,
   mail: (props: IconProps) => <Mail {...props} />,
   spinner: (props: IconProps) => (
     <svg
