@@ -118,6 +118,16 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             )}
+            <TableRow>
+              <TableCell colSpan={columns.length} className="text-center text-muted-foreground">
+                Total: {new Intl.NumberFormat("fr-FR", {
+                  style: "currency",
+                  currency: "EUR",
+                }).format(table.getFilteredRowModel().rows.reduce((acc, row) => {
+                  return acc + parseFloat(row.getValue("amount"));
+                }, 0))}
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </div>
