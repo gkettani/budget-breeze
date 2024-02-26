@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import CategoriesList from "~/components/categories/categories-list";
 import CreateTransactionDialog from "~/components/dialogs/create-transaction";
+import DonutChartContainer from "~/components/donut-chart";
 import FinancialAccountsList from "~/components/financial-accounts/financial-accounts-list";
 import { Icons } from "~/components/icons";
 import { columns } from "~/components/transactions/columns";
@@ -17,6 +18,14 @@ export default function App() {
   const { data: transactions, isLoading: isTransactionsLoading } = api.transactions.list.useQuery();
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.list.useQuery();
   const { data: financialAccounts, isLoading: isFinancialAccountsLoading } = api.financialAccounts.list.useQuery();
+
+  const donutData = categories
+    ?.filter((category) => category.monthExpenseTotal > 0)
+    ?.map((category) => ({
+      id: category.id,
+      name: category.name,
+      value: category.monthExpenseTotal,
+    })) ?? [];
 
   const assignedMoney = categories?.reduce((acc, category) => acc + Number(category.budget), 0) ?? 0;
   const monthTotalExpenses = categories?.reduce((acc, category) => acc + Number(category.monthExpenseTotal), 0) ?? 0;
@@ -69,6 +78,7 @@ export default function App() {
           <CreateTransactionDialog />
         </div>
         <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
+        <DonutChartContainer data={donutData} />
       </div>
       <Toaster />
     </div>
