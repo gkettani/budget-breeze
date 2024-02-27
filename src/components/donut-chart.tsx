@@ -1,13 +1,10 @@
 // 'use client';
 import { Card, DonutChart, List, ListItem } from '@tremor/react';
+import { formatCurrency } from '~/utils/helpers';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
-
-const currencyFormatter = (number: number | bigint) => {
-  return '$' + Intl.NumberFormat('us').format(number).toString();
-};
 
 type DataType = {
   name: string;
@@ -27,8 +24,7 @@ export default function DonutChartContainer({ data }: {
           className="mt-8"
           data={data ?? []}
           index="name"
-          valueFormatter={currencyFormatter}
-          showTooltip={false}
+          valueFormatter={formatCurrency}
           colors={['cyan', 'blue', 'indigo', 'violet', 'fuchsia']}
         />
         <p className="mt-8 flex items-center justify-between text-tremor-label text-tremor-content dark:text-dark-tremor-content">
@@ -52,7 +48,7 @@ export default function DonutChartContainer({ data }: {
               </div>
               <div className="flex items-center space-x-2">
                 <span className="font-medium tabular-nums text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                  {currencyFormatter(item.value)}
+                  {formatCurrency(item.value)}
                 </span>
               </div>
             </ListItem>

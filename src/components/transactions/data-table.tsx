@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { api } from "~/utils/api";
+import { formatCurrency } from "~/utils/helpers";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -120,11 +121,8 @@ export function DataTable<TData, TValue>({
             )}
             <TableRow>
               <TableCell colSpan={columns.length} className="text-center text-muted-foreground">
-                Total: {new Intl.NumberFormat("fr-FR", {
-                  style: "currency",
-                  currency: "EUR",
-                }).format(table.getFilteredRowModel().rows.reduce((acc, row) => {
-                  return acc + parseFloat(row.getValue("amount"));
+                Total: {formatCurrency(table.getFilteredRowModel().rows.reduce((acc, row) => {
+                  return acc + parseInt(row.getValue("amount"));
                 }, 0))}
               </TableCell>
             </TableRow>

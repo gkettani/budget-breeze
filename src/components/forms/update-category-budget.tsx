@@ -14,9 +14,10 @@ import {
   FormDescription,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { amountToCents } from '~/utils/helpers';
 
 const updateCategoryBudgetSchema = z.object({
-  amount: z.coerce.number(),
+  amount: z.coerce.number().transform(amountToCents),
 });
 
 export type UpdateCategoryBudgetFormValues = z.infer<typeof updateCategoryBudgetSchema>;

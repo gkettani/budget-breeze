@@ -14,11 +14,12 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { amountToCents, centsToAmount } from '~/utils/helpers';
 
 const updateCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  budget: z.coerce.number(),
-  target: z.coerce.number().gte(0),
+  budget: z.coerce.number().transform(amountToCents),
+  target: z.coerce.number().gte(0).transform(amountToCents),
 });
 
 export type UpdateCategoryFormValues = z.infer<typeof updateCategorySchema>;
@@ -36,8 +37,8 @@ export function UpdateCategoryForm({
     resolver: zodResolver(updateCategorySchema),
     defaultValues: {
       name: category.name,
-      budget: Number(category.budget),
-      target: Number(category.target),
+      budget: centsToAmount(category.budget),
+      target: centsToAmount(category.target),
     },
   });
 

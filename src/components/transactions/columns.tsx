@@ -4,6 +4,7 @@ import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import type { DateRange } from "~/types";
+import { formatCurrency } from '~/utils/helpers';
 import { DataTableRowActions } from "./data-table-row-actions";
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -83,13 +84,9 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("fr-FR", {
-        style: "currency",
-        currency: "EUR",
-      }).format(amount);
+      const amount = parseInt(row.getValue("amount"));
 
-      return <div className="text-right font-medium pr-5">{formatted}</div>;
+      return <div className="text-right font-medium pr-5">{formatCurrency(amount)}</div>;
     },
   },
   {

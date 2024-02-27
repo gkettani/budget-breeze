@@ -31,10 +31,11 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { cn } from "~/lib/utils";
+import { amountToCents } from '~/utils/helpers';
 
 const createTransactionSchema = z.object({
   description: z.string().min(1, { message: 'You must provide a description' }),
-  amount: z.coerce.number(),
+  amount: z.coerce.number().transform(amountToCents),
   date: z.date({
     required_error: 'Date is required',
   }),

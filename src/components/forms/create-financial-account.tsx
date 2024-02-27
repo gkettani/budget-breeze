@@ -13,10 +13,11 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { amountToCents } from '~/utils/helpers';
 
 const createFinancialAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  balance: z.coerce.number(),
+  balance: z.coerce.number().transform(amountToCents),
 });
 
 export type CreateFinancialAccountFormValues = z.infer<typeof createFinancialAccountSchema>;

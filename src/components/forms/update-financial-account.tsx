@@ -14,10 +14,11 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { amountToCents, centsToAmount } from '~/utils/helpers';
 
 const updateFinancialAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  balance: z.coerce.number(),
+  balance: z.coerce.number().transform(amountToCents),
 });
 
 export type UpdateFinancialAccountFormValues = z.infer<typeof updateFinancialAccountSchema>;
@@ -35,7 +36,7 @@ export function UpdateFinancialAccountForm({
     resolver: zodResolver(updateFinancialAccountSchema),
     defaultValues: {
       name: financialAccount.name,
-      balance: Number(financialAccount.balance),
+      balance: centsToAmount(financialAccount.balance),
     },
   });
 
