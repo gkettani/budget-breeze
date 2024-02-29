@@ -35,7 +35,9 @@ import { amountToCents } from '~/utils/helpers';
 
 const createTransactionSchema = z.object({
   description: z.string().min(1, { message: 'You must provide a description' }),
-  amount: z.coerce.number().transform(amountToCents),
+  amount: z.coerce.number().transform(amountToCents).refine((value) => Number.isInteger(value), {
+    message: 'The amount must have up to 2 digits after the decimal point.',
+  }),
   date: z.date({
     required_error: 'Date is required',
   }),
@@ -90,7 +92,7 @@ export function CreateTransactionForm({
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="Amount" step="0.01" {...field} />
+                <Input placeholder="Amount" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

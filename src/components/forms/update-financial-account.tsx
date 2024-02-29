@@ -18,7 +18,9 @@ import { amountToCents, centsToAmount } from '~/utils/helpers';
 
 const updateFinancialAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  balance: z.coerce.number().transform(amountToCents),
+  balance: z.coerce.number().transform(amountToCents).refine((value) => Number.isInteger(value), {
+    message: 'The amount must have up to 2 digits after the decimal point.',
+  }),
 });
 
 export type UpdateFinancialAccountFormValues = z.infer<typeof updateFinancialAccountSchema>;
@@ -63,7 +65,7 @@ export function UpdateFinancialAccountForm({
             <FormItem>
               <FormLabel>Balance</FormLabel>
               <FormControl>
-                <Input placeholder="Balance" type="number" step="0.01" {...field} />
+                <Input placeholder="Balance" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

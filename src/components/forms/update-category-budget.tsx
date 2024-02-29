@@ -17,7 +17,9 @@ import { Input } from '~/components/ui/input';
 import { amountToCents } from '~/utils/helpers';
 
 const updateCategoryBudgetSchema = z.object({
-  amount: z.coerce.number().transform(amountToCents),
+  amount: z.coerce.number().transform(amountToCents).refine((value) => Number.isInteger(value), {
+    message: 'The amount must have up to 2 digits after the decimal point.',
+  }),
 });
 
 export type UpdateCategoryBudgetFormValues = z.infer<typeof updateCategoryBudgetSchema>;
@@ -46,7 +48,7 @@ export function UpdateCategoryBudgetForm({
             <FormItem>
               <FormLabel>Amount to Assign / Unassign</FormLabel>
               <FormControl>
-                <Input placeholder="amount" step="0.01" type="number" {...field} />
+                <Input placeholder="amount" {...field} />
               </FormControl>
               <FormDescription>
                 You can assign or unassign money from this category by entering a positive or negative number.

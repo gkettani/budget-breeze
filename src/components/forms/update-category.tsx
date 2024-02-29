@@ -18,8 +18,12 @@ import { amountToCents, centsToAmount } from '~/utils/helpers';
 
 const updateCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  budget: z.coerce.number().transform(amountToCents),
-  target: z.coerce.number().gte(0).transform(amountToCents),
+  budget: z.coerce.number().transform(amountToCents).refine((value) => Number.isInteger(value), {
+    message: 'The amount must have up to 2 digits after the decimal point.',
+  }),
+  target: z.coerce.number().gte(0).transform(amountToCents).refine((value) => Number.isInteger(value), {
+    message: 'The amount must have up to 2 digits after the decimal point.',
+  }),
 });
 
 export type UpdateCategoryFormValues = z.infer<typeof updateCategorySchema>;
@@ -65,7 +69,7 @@ export function UpdateCategoryForm({
             <FormItem>
               <FormLabel>Budget</FormLabel>
               <FormControl>
-                <Input placeholder="Budget" type="number" step="0.01" {...field} />
+                <Input placeholder="Budget" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +82,7 @@ export function UpdateCategoryForm({
             <FormItem>
               <FormLabel>Target</FormLabel>
               <FormControl>
-                <Input placeholder="Target" type="number" step="0.01" {...field} />
+                <Input placeholder="Target" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
