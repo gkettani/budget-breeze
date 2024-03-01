@@ -23,6 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -31,11 +32,12 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { cn } from "~/lib/utils";
+import { TRANSACTION_TYPE } from '~/utils/enums';
 import { amountToCents } from '~/utils/helpers';
 
 const createTransactionSchema = z.object({
   description: z.string().min(1, { message: 'You must provide a description' }),
-  amount: z.coerce.number().transform(amountToCents).refine((value) => Number.isInteger(value), {
+  amount: z.coerce.number().gt(0).transform(amountToCents).refine((value) => Number.isInteger(value), {
     message: 'The amount must have up to 2 digits after the decimal point.',
   }),
   date: z.date({
@@ -45,6 +47,10 @@ const createTransactionSchema = z.object({
   financialAccountId: z.string({
     required_error: 'You must select an account',
   }),
+  type: z.union([
+    z.literal(TRANSACTION_TYPE.INCOME),
+    z.literal(TRANSACTION_TYPE.EXPENSE),
+  ]),
 });
 
 export type CreateTransactionFormValues = z.infer<typeof createTransactionSchema>;
@@ -66,6 +72,7 @@ export function CreateTransactionForm({
       description: '',
       amount: 0,
       date: new Date(),
+      type: TRANSACTION_TYPE.EXPENSE,
     },
   });
 
@@ -93,6 +100,39 @@ export function CreateTransactionForm({
               <FormLabel>Amount</FormLabel>
               <FormControl>
                 <Input placeholder="Amount" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex gap-6 my-6"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={TRANSACTION_TYPE.EXPENSE} />
+                    </FormControl>
+                    <FormLabel className="cursor-pointer hover:underline">
+                      Expense
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={TRANSACTION_TYPE.INCOME} />
+                    </FormControl>
+                    <FormLabel className="cursor-pointer hover:underline">
+                      Income
+                    </FormLabel>
+                  </FormItem>
+                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>

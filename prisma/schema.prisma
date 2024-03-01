@@ -65,6 +65,7 @@ model Transaction {
   description        String
   amount             Int
   date               DateTime
+  type               String          @default("expense")
   categoryId         String?
   category           Category?        @relation(fields: [categoryId], references: [id])
   financialAccountId String

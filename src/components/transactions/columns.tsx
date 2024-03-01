@@ -4,6 +4,7 @@ import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import type { DateRange } from "~/types";
+import { TRANSACTION_TYPE } from '~/utils/enums';
 import { formatCurrency } from '~/utils/helpers';
 import { DataTableRowActions } from "./data-table-row-actions";
 
@@ -86,7 +87,14 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       const amount = parseInt(row.getValue("amount"));
 
-      return <div className="text-right font-medium pr-5">{formatCurrency(amount)}</div>;
+      switch (row.original.type) {
+        case TRANSACTION_TYPE.INCOME:
+          return <div className="text-right font-medium pr-5 text-green-600">{formatCurrency(amount)}</div>;
+        case TRANSACTION_TYPE.EXPENSE:
+          return <div className="text-right font-medium pr-5">{formatCurrency(-amount)}</div>;
+        default:
+          return <div className="text-right font-medium pr-5">{formatCurrency(amount)}</div>;
+      }
     },
   },
   {

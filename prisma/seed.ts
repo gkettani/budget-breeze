@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import type { Transaction, FinancialAccount, Category } from '@prisma/client';
+import { TRANSACTION_TYPE } from "~/utils/enums";
 import { db } from "../src/server/db";
 
 const USER_ID = 'clqjkimtn0000vefwgczvtltf';
@@ -7,8 +8,9 @@ const USER_ID = 'clqjkimtn0000vefwgczvtltf';
 function createRandomTransaction(financialAccounts: FinancialAccount[], categories: Omit<Category, "target">[]): Omit<Transaction, 'id'> {
   return {
     description: faker.finance.transactionDescription(),
-    amount: parseInt(faker.finance.amount(-1000, 1000)),
+    amount: parseInt(faker.finance.amount(0, 1000)),
     date: faker.date.past(),
+    type: faker.helpers.enumValue(TRANSACTION_TYPE),
     financialAccountId: faker.helpers.arrayElement(financialAccounts).id,
     categoryId: faker.helpers.arrayElement(categories).id,
     userId: USER_ID,

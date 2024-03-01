@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { TRANSACTION_TYPE } from "~/utils/enums";
 
 export const transactionsRouter = createTRPCRouter({
   search: protectedProcedure
@@ -65,16 +66,21 @@ export const transactionsRouter = createTRPCRouter({
       amount: z.number(),
       categoryId: z.string().optional(),
       financialAccountId: z.string(),
+      type: z.union([
+        z.literal(TRANSACTION_TYPE.INCOME),
+        z.literal(TRANSACTION_TYPE.EXPENSE),
+      ]),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
-      const { description, date, amount, categoryId, financialAccountId } = input;
+      const { description, date, amount, categoryId, financialAccountId, type } = input;
 
       const transaction = await db.$transaction(async (tx) => {
         const transaction = await tx.transaction.create({
           data: {
             description,
             date,
+            type,
             amount,
             categoryId,
             userId: ctx.session.user.id,
@@ -86,7 +92,9 @@ export const transactionsRouter = createTRPCRouter({
           await tx.category.update({
             where: { id: categoryId },
             data: {
-              budget: {
+              budget: (type === TRANSACTION_TYPE.EXPENSE) ? {
+                decrement: amount,
+              } : {
                 increment: amount,
               },
             },
@@ -96,7 +104,9 @@ export const transactionsRouter = createTRPCRouter({
         await tx.financialAccount.update({
           where: { id: financialAccountId },
           data: {
-            balance: {
+            balance: (type === TRANSACTION_TYPE.EXPENSE) ? {
+              decrement: amount,
+            } : {
               increment: amount,
             },
           },
@@ -137,7 +147,9 @@ export const transactionsRouter = createTRPCRouter({
           await tx.category.update({
             where: { id: oldTransaction.categoryId },
             data: {
-              budget: {
+              budget: (oldTransaction.type === TRANSACTION_TYPE.EXPENSE) ? {
+                increment: oldTransaction.amount,
+              } : {
                 decrement: oldTransaction.amount,
               },
             },
@@ -148,7 +160,9 @@ export const transactionsRouter = createTRPCRouter({
           await tx.category.update({
             where: { id: transaction.categoryId },
             data: {
-              budget: {
+              budget: (transaction.type === TRANSACTION_TYPE.EXPENSE) ? {
+                decrement: transaction.amount,
+              } : {
                 increment: transaction.amount,
               },
             },
@@ -186,7 +200,9 @@ export const transactionsRouter = createTRPCRouter({
         await tx.financialAccount.update({
           where: { id: transaction.financialAccountId },
           data: {
-            balance: {
+            balance: (transaction.type === TRANSACTION_TYPE.EXPENSE) ? {
+              increment: transaction.amount,
+            } : {
               decrement: transaction.amount,
             },
           },
@@ -196,7 +212,9 @@ export const transactionsRouter = createTRPCRouter({
           await tx.category.update({
             where: { id: transaction.categoryId },
             data: {
-              budget: {
+              budget: (transaction.type === TRANSACTION_TYPE.EXPENSE) ? {
+                increment: transaction.amount,
+              } : {
                 decrement: transaction.amount,
               },
             },

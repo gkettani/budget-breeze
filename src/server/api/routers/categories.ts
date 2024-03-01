@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { TRANSACTION_TYPE } from "~/utils/enums";
 
 export const categoriesRouter = createTRPCRouter({
   list: protectedProcedure
@@ -20,16 +21,14 @@ export const categoriesRouter = createTRPCRouter({
           date: {
             gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
           },
-          amount: {
-            lt: 0,
-          },
+          type: TRANSACTION_TYPE.EXPENSE,
         },
       });
 
       return categories.map((category) => {
         const total = transactions
           .filter((transaction) => transaction.categoryId === category.id)
-          .reduce((acc, transaction) => acc - transaction.amount, 0);
+          .reduce((acc, transaction) => acc + transaction.amount, 0);
 
         return {
           ...category,
