@@ -33,13 +33,13 @@ import {
 } from "~/components/ui/select";
 import { cn } from "~/lib/utils";
 import { TRANSACTION_TYPE } from '~/utils/enums';
-import { amountToCents } from '~/utils/helpers';
+import { POSITIVE_FLOAT_REGEX, amountToCents } from '~/utils/helpers';
 
 const createTransactionSchema = z.object({
   description: z.string().min(1, { message: 'You must provide a description' }),
-  amount: z.coerce.number().gt(0).transform(amountToCents).refine((value) => Number.isInteger(value), {
-    message: 'The amount must have up to 2 digits after the decimal point.',
-  }),
+  amount: z.string().regex(POSITIVE_FLOAT_REGEX, {
+    message: 'The amount must be a number greater than 0 with up to 2 digits after the decimal point.',
+  }).transform((value) => amountToCents(parseFloat(value))),
   date: z.date({
     required_error: 'Date is required',
   }),

@@ -13,13 +13,13 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { amountToCents } from '~/utils/helpers';
+import { FLOAT_REGEX, amountToCents } from '~/utils/helpers';
 
 const createFinancialAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  balance: z.coerce.number().transform(amountToCents).refine((value) => Number.isInteger(value), {
-    message: 'The amount must have up to 2 digits after the decimal point.',
-  }),
+  balance: z.string().regex(FLOAT_REGEX, {
+    message: 'The balance must be a number with up to 2 digits after the decimal point.',
+  }).transform((value) => amountToCents(parseFloat(value))),
 });
 
 export type CreateFinancialAccountFormValues = z.infer<typeof createFinancialAccountSchema>;

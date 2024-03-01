@@ -17,9 +17,9 @@ import { Input } from '~/components/ui/input';
 import { amountToCents } from '~/utils/helpers';
 
 const updateCategoryBudgetSchema = z.object({
-  amount: z.coerce.number().transform(amountToCents).refine((value) => Number.isInteger(value), {
-    message: 'The amount must have up to 2 digits after the decimal point.',
-  }),
+  amount: z.string().regex(/^-?\d+(\.\d{1,2})?$/, {
+    message: 'The balance must be a number with up to 2 digits after the decimal point.',
+  }).transform((value) => amountToCents(parseFloat(value))),
 });
 
 export type UpdateCategoryBudgetFormValues = z.infer<typeof updateCategoryBudgetSchema>;
