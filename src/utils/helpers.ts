@@ -1,7 +1,9 @@
-export function formatCurrency(amount: number) {
+export function formatCurrency(amount: number, compact = false) {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",
+    minimumFractionDigits: compact ? 0 : 2,
+    notation: compact ? "compact" : "standard",
   }).format(amount / 100);
 }
 

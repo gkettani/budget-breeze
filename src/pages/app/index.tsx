@@ -2,6 +2,7 @@ import { Card, Grid, Text, Metric } from "@tremor/react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import React from "react";
+import BarChartContainer from "~/components/bar-chart";
 import CategoriesList from "~/components/categories/categories-list";
 import CreateTransactionDialog from "~/components/dialogs/create-transaction";
 import DonutChartContainer from "~/components/donut-chart";
@@ -79,6 +80,7 @@ export default function App() {
         </div>
         <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
         <DonutChartContainer data={donutData} />
+        <BarChartContainer data={transactions ?? []} />
       </div>
       <Toaster />
     </div>
