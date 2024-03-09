@@ -14,10 +14,10 @@ import {
   FormDescription,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { amountToCents } from '~/utils/helpers';
+import { FLOAT_REGEX, amountToCents } from '~/utils/helpers';
 
 const updateCategoryBudgetSchema = z.object({
-  amount: z.string().regex(/^-?\d+(\.\d{1,2})?$/, {
+  amount: z.coerce.string().regex(FLOAT_REGEX, {
     message: 'The balance must be a number with up to 2 digits after the decimal point.',
   }).transform((value) => amountToCents(parseFloat(value))),
 });
@@ -33,9 +33,6 @@ export function UpdateCategoryBudgetForm({
 }) {
   const form = useForm<UpdateCategoryBudgetFormValues>({
     resolver: zodResolver(updateCategoryBudgetSchema),
-    defaultValues: {
-      amount: 0,
-    },
   });
 
   return (

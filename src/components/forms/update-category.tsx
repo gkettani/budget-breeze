@@ -18,10 +18,10 @@ import { FLOAT_REGEX, POSITIVE_FLOAT_REGEX, amountToCents, centsToAmount } from 
 
 const updateCategorySchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  budget: z.string().regex(FLOAT_REGEX, {
+  budget: z.coerce.string().regex(FLOAT_REGEX, {
     message: 'The balance must be a number with up to 2 digits after the decimal point.',
   }).transform((value) => amountToCents(parseFloat(value))),
-  target: z.string().regex(POSITIVE_FLOAT_REGEX, {
+  target: z.coerce.string().regex(POSITIVE_FLOAT_REGEX, {
     message: 'The balance must be a number greater than 0 with up to 2 digits after the decimal point.',
   }).transform((value) => amountToCents(parseFloat(value))),
 });

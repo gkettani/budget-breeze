@@ -30,7 +30,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
 
   return (
     <>
-      <Card className="sm:mx-auto sm:max-w-xl">
+      <Card className="sm:mx-auto sm:max-w-xl mt-10">
         <h3 className="ml-1 mr-1 font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
           Incomes and Expenses overview
         </h3>
@@ -41,8 +41,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
           colors={['cyan', 'blue']}
           valueFormatter={formatCurrency}
           yAxisWidth={60}
-          className="mt-6 hidden h-60 sm:block"
-          intervalType='preserveStartEnd'
+          className="mt-6 hidden h-80 sm:block"
         />
       </Card>
     </>
