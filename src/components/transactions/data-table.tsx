@@ -12,6 +12,8 @@ import { Icons } from "~/components/icons";
 import { DataTableDateFilter } from "~/components/transactions/data-table-date-filter";
 import { DataTableFacetedFilter } from "~/components/transactions/data-table-faceted-filter";
 import { DataTablePagination } from "~/components/transactions/data-table-pagination";
+import { DataTableTypeFilter } from "~/components/transactions/data-table-type-filter";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
   Table,
@@ -58,6 +60,8 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const isFiltered = table.getState().columnFilters.length > 0;
+
   return (
     <div className="space-y-4">
       <div className="flex items-center py-4 gap-5">
@@ -76,7 +80,18 @@ export function DataTable<TData, TValue>({
             options={categories ?? []}
           />
         )}
+        <DataTableTypeFilter column={table.getColumn("amount")} />
         <DataTableDateFilter column={table.getColumn("date")} />
+        {isFiltered && (
+          <Button
+            variant="ghost"
+            onClick={() => table.resetColumnFilters()}
+            className="h-8 px-2 lg:px-3"
+          >
+            Reset
+            <Icons.xmark className="ml-2 h-4 w-4" />
+          </Button>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

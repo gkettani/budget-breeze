@@ -84,6 +84,10 @@ export const columns: ColumnDef<Transaction>[] = [
         </div>
       );
     },
+    filterFn: (row, _id, value: string) => {
+      const type = row.original.type;
+      return value === type;
+    },
     cell: ({ row }) => {
       const amount = parseInt(row.getValue("amount"));
 
