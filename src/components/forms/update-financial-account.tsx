@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { FinancialAccount } from '@prisma/client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -14,11 +13,12 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import type { FinancialAccount } from '~/db';
 import { FLOAT_REGEX, amountToCents, centsToAmount } from '~/utils/helpers';
 
 const updateFinancialAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  balance: z.string().regex(FLOAT_REGEX, {
+  balance: z.coerce.string().regex(FLOAT_REGEX, {
     message: 'The balance must be a number with up to 2 digits after the decimal point.',
   }).transform((value) => amountToCents(parseFloat(value))),
 });

@@ -17,7 +17,7 @@ import { FLOAT_REGEX, amountToCents } from '~/utils/helpers';
 
 const createFinancialAccountSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
-  balance: z.string().regex(FLOAT_REGEX, {
+  balance: z.coerce.string().regex(FLOAT_REGEX, {
     message: 'The balance must be a number with up to 2 digits after the decimal point.',
   }).transform((value) => amountToCents(parseFloat(value))),
 });

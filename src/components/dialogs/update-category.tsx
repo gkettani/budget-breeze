@@ -1,4 +1,3 @@
-import type { Category } from "@prisma/client";
 import React from "react";
 import { UpdateCategoryForm } from "~/components/forms/update-category";
 import type { UpdateCategoryFormValues } from "~/components/forms/update-category";
@@ -9,6 +8,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { toast } from "~/components/ui/use-toast";
+import type { Category } from "~/db";
 import { api } from "~/utils/api";
 
 export default function UpdateCategoryDialog({

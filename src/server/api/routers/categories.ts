@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { schema, eq, gte, and } from '~/db';
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { TRANSACTION_TYPE } from "~/utils/enums";
 
@@ -7,23 +8,23 @@ export const categoriesRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const { db } = ctx;
 
-      const categories = await db.category.findMany({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        orderBy: { name: "asc" },
-      });
+      const categories = await db
+        .select()
+        .from(schema.categories)
+        .where(eq(schema.categories.userId, ctx.session.user.id))
+        .orderBy(schema.categories.name);
 
       // get current month's transactions
-      const transactions = await db.transaction.findMany({
-        where: {
-          userId: ctx.session.user.id,
-          date: {
-            gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-          },
-          type: TRANSACTION_TYPE.EXPENSE,
-        },
-      });
+      const transactions = await db
+        .select()
+        .from(schema.transactions)
+        .where(
+          and(
+            eq(schema.transactions.userId, ctx.session.user.id),
+            eq(schema.transactions.type, TRANSACTION_TYPE.EXPENSE),
+            gte(schema.transactions.date, new Date(new Date().getFullYear(), new Date().getMonth(), 1)),
+          ),
+        );
 
       return categories.map((category) => {
         const total = transactions
@@ -45,19 +46,20 @@ export const categoriesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
 
-      const category = await db.category.create({
-        data: {
+      const category = await db
+        .insert(schema.categories)
+        .values({
           name: input.name,
           userId: ctx.session.user.id,
-        },
-      });
+        })
+        .returning();
 
       return category;
     }),
 
   update: protectedProcedure
     .input(z.object({
-      id: z.string(),
+      id: z.number(),
       name: z.string().optional(),
       budget: z.number().optional(),
       target: z.number().optional(),
@@ -66,29 +68,37 @@ export const categoriesRouter = createTRPCRouter({
       const { db } = ctx;
       const { id, name, budget, target } = input;
 
-      const category = await db.category.update({
-        where: { id },
-        data: {
+      const category = await db
+        .update(schema.categories)
+        .set({
           name,
           budget,
           target,
-        },
-      });
+        })
+        .where(and(
+          eq(schema.categories.id, id),
+          eq(schema.categories.userId, ctx.session.user.id),
+        ))
+        .returning();
 
       return category;
     }),
 
   delete: protectedProcedure
     .input(z.object({
-      id: z.string(),
+      id: z.number(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
       const { id } = input;
 
-      const category = await db.category.delete({
-        where: { id },
-      });
+      const category = await db
+        .delete(schema.categories)
+        .where(and(
+          eq(schema.categories.id, id),
+          eq(schema.categories.userId, ctx.session.user.id),
+        ))
+        .returning();
 
       return category;
     }),

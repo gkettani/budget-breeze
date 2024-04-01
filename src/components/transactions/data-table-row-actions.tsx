@@ -1,4 +1,3 @@
-import type { Transaction } from "@prisma/client";
 import type { Row } from "@tanstack/react-table";
 import React from "react";
 import UpdateTransactionDialog from "~/components/dialogs/update-transaction";
@@ -19,10 +18,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { toast } from "~/components/ui/use-toast";
+import type { Transaction } from "~/db";
 import { api } from "~/utils/api";
 
 interface DataTableRowActionsProps<TData> {
@@ -66,12 +65,6 @@ export function DataTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(transaction.id)}
-          >
-            Copy ID
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex cursor-pointer items-center"
             onSelect={() => setShowUpdateDialog(true)}

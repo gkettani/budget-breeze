@@ -1,9 +1,9 @@
-import type { Transaction } from '@prisma/client';
 import { BarChart, Card } from '@tremor/react';
+import type { Transaction } from '~/db';
 import { formatCurrency } from '~/utils/helpers';
 
 type BarChartContainerProps = {
-  data: Transaction[];
+  data: Omit<Transaction, 'userId'>[];
 };
 
 export default function BarChartContainer({ data }: BarChartContainerProps) {

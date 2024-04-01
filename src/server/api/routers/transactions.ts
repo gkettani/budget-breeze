@@ -1,60 +1,36 @@
 import { z } from "zod";
+import { schema, eq, desc, and, decrement, increment } from '~/db';
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { TRANSACTION_TYPE } from "~/utils/enums";
 
 export const transactionsRouter = createTRPCRouter({
-  search: protectedProcedure
-    .input(z.object({
-      description: z.string().optional(),
-      date: z.string().optional(),
-      page: z.number().optional(),
-      pageSize: z.number().optional(),
-    }))
-    .query(async ({ ctx, input }) => {
-      const { description, date, page, pageSize } = input;
-      const { db } = ctx;
-
-      const where = {
-        description: {
-          contains: description ?? "",
-        },
-        date,
-        userId: ctx.session.user.id,
-      };
-
-      const take = pageSize ?? 10;
-      const skip = (page ?? 0) * take;
-
-      const [transactions, count] = await Promise.all([
-        db.transaction.findMany({
-          where,
-          take,
-          skip,
-          orderBy: { date: "desc" },
-        }),
-        db.transaction.count({ where }),
-      ]);
-
-      return {
-        transactions,
-        count,
-      };
-    }),
-
   list: protectedProcedure
     .query(async ({ ctx }) => {
       const { db } = ctx;
 
-      const transactions = await db.transaction.findMany({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        orderBy: { date: "desc" },
-        include: {
-          category: true,
-          financialAccount: true,
-        },
-      });
+      const transactions = await db
+        .select({
+          id: schema.transactions.id,
+          description: schema.transactions.description,
+          date: schema.transactions.date,
+          amount: schema.transactions.amount,
+          type: schema.transactions.type,
+          categoryId: schema.transactions.categoryId,
+          financialAccountId: schema.transactions.financialAccountId,
+          category: {
+            id: schema.categories.id,
+            name: schema.categories.name,
+          },
+          financialAccount: {
+            id: schema.financialAccounts.id,
+            name: schema.financialAccounts.name,
+          },
+        })
+        .from(schema.transactions)
+        .where(eq(schema.transactions.userId, ctx.session.user.id))
+        .leftJoin(schema.categories, eq(schema.categories.id, schema.transactions.categoryId))
+        .leftJoin(schema.financialAccounts, eq(schema.financialAccounts.id, schema.transactions.financialAccountId))
+        .orderBy(desc(schema.transactions.date));
 
       return transactions;
     }),
@@ -64,8 +40,8 @@ export const transactionsRouter = createTRPCRouter({
       description: z.string(),
       date: z.date(),
       amount: z.number(),
-      categoryId: z.string().optional(),
-      financialAccountId: z.string(),
+      categoryId: z.number().nullable(),
+      financialAccountId: z.number(),
       type: z.union([
         z.literal(TRANSACTION_TYPE.INCOME),
         z.literal(TRANSACTION_TYPE.EXPENSE),
@@ -75,42 +51,41 @@ export const transactionsRouter = createTRPCRouter({
       const { db } = ctx;
       const { description, date, amount, categoryId, financialAccountId, type } = input;
 
-      const transaction = await db.$transaction(async (tx) => {
-        const transaction = await tx.transaction.create({
-          data: {
+      const transaction = await db.transaction(async (tx) => {
+        const transaction = await tx
+          .insert(schema.transactions)
+          .values({
+            userId: ctx.session.user.id,
+            categoryId: categoryId,
+            financialAccountId,
             description,
+            amount,
             date,
             type,
-            amount,
-            categoryId,
-            userId: ctx.session.user.id,
-            financialAccountId,
-          },
-        });
+          })
+          .returning();
 
         if (categoryId) {
-          await tx.category.update({
-            where: { id: categoryId },
-            data: {
-              budget: (type === TRANSACTION_TYPE.EXPENSE) ? {
-                decrement: amount,
-              } : {
-                increment: amount,
-              },
-            },
-          });
+          await tx
+            .update(schema.categories)
+            .set({
+              budget: (type === TRANSACTION_TYPE.EXPENSE) ?
+                decrement(schema.categories.budget, amount) :
+                increment(schema.categories.budget, amount)
+              ,
+            })
+            .where(eq(schema.categories.id, categoryId));
         }
 
-        await tx.financialAccount.update({
-          where: { id: financialAccountId },
-          data: {
-            balance: (type === TRANSACTION_TYPE.EXPENSE) ? {
-              decrement: amount,
-            } : {
-              increment: amount,
-            },
-          },
-        });
+        await tx
+          .update(schema.financialAccounts)
+          .set({
+            balance: (type === TRANSACTION_TYPE.EXPENSE) ?
+              decrement(schema.financialAccounts.balance, amount) :
+              increment(schema.financialAccounts.balance, amount)
+            ,
+          })
+          .where(eq(schema.financialAccounts.id, financialAccountId));
 
         return transaction;
       });
@@ -120,53 +95,62 @@ export const transactionsRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(z.object({
-      id: z.string(),
+      id: z.number(),
       description: z.string(),
       date: z.date(),
-      categoryId: z.string().nullable().optional(),
+      categoryId: z.coerce.number().nullable().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
       const { id, ...data } = input;
 
-      const oldTransaction = await db.transaction.findUnique({
-        where: { id },
-      });
+      const oldTransaction = await db
+        .select()
+        .from(schema.transactions)
+        .where(and(
+          eq(schema.transactions.id, id),
+          eq(schema.transactions.userId, ctx.session.user.id),
+        ))
+        .get();
 
       if (!oldTransaction) {
         throw new Error("Transaction not found");
       }
 
-      const transaction = await db.$transaction(async (tx) => {
-        const transaction = await tx.transaction.update({
-          where: { id },
-          data,
-        });
+      const transaction = await db.transaction(async (tx) => {
+        const transaction = await tx
+          .update(schema.transactions)
+          .set({
+            description: data.description,
+            date: data.date,
+            categoryId: data.categoryId ?? null,
+          })
+          .where(eq(schema.transactions.id, id))
+          .returning()
+          .get();
 
         if (oldTransaction.categoryId) {
-          await tx.category.update({
-            where: { id: oldTransaction.categoryId },
-            data: {
-              budget: (oldTransaction.type === TRANSACTION_TYPE.EXPENSE) ? {
-                increment: oldTransaction.amount,
-              } : {
-                decrement: oldTransaction.amount,
-              },
-            },
-          });
+          await tx
+            .update(schema.categories)
+            .set({
+              budget: (oldTransaction.type === TRANSACTION_TYPE.EXPENSE) ?
+                increment(schema.categories.budget, oldTransaction.amount) :
+                decrement(schema.categories.budget, oldTransaction.amount)
+              ,
+            })
+            .where(eq(schema.categories.id, oldTransaction.categoryId));
         }
 
         if (transaction.categoryId) {
-          await tx.category.update({
-            where: { id: transaction.categoryId },
-            data: {
-              budget: (transaction.type === TRANSACTION_TYPE.EXPENSE) ? {
-                decrement: transaction.amount,
-              } : {
-                increment: transaction.amount,
-              },
-            },
-          });
+          await tx
+            .update(schema.categories)
+            .set({
+              budget: (transaction.type === TRANSACTION_TYPE.EXPENSE) ?
+                decrement(schema.categories.budget, transaction.amount) :
+                increment(schema.categories.budget, transaction.amount)
+              ,
+            })
+            .where(eq(schema.categories.id, transaction.categoryId));
         }
 
         return transaction;
@@ -177,48 +161,51 @@ export const transactionsRouter = createTRPCRouter({
 
   delete: protectedProcedure
     .input(z.object({
-      id: z.string(),
+      id: z.number(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
       const { id } = input;
 
-      const transaction = await db.transaction.findUnique({
-        where: { id },
-      });
+      const transaction = await db
+        .select()
+        .from(schema.transactions)
+        .where(and(
+          eq(schema.transactions.id, id),
+          eq(schema.transactions.userId, ctx.session.user.id),
+        ))
+        .get();
 
       if (!transaction) {
         throw new Error("Transaction not found");
       }
 
-      await db.$transaction(async (tx) => {
+      await db.transaction(async (tx) => {
 
-        await tx.transaction.delete({
-          where: { id },
-        });
+        await tx
+          .delete(schema.transactions)
+          .where(eq(schema.transactions.id, id));
 
-        await tx.financialAccount.update({
-          where: { id: transaction.financialAccountId },
-          data: {
-            balance: (transaction.type === TRANSACTION_TYPE.EXPENSE) ? {
-              increment: transaction.amount,
-            } : {
-              decrement: transaction.amount,
-            },
-          },
-        });
+        await tx
+          .update(schema.financialAccounts)
+          .set({
+            balance: (transaction.type === TRANSACTION_TYPE.EXPENSE) ?
+              increment(schema.financialAccounts.balance, transaction.amount) :
+              decrement(schema.financialAccounts.balance, transaction.amount)
+            ,
+          })
+          .where(eq(schema.financialAccounts.id, transaction.financialAccountId));
 
         if (transaction.categoryId) {
-          await tx.category.update({
-            where: { id: transaction.categoryId },
-            data: {
-              budget: (transaction.type === TRANSACTION_TYPE.EXPENSE) ? {
-                increment: transaction.amount,
-              } : {
-                decrement: transaction.amount,
-              },
-            },
-          });
+          await tx
+            .update(schema.categories)
+            .set({
+              budget: (transaction.type === TRANSACTION_TYPE.EXPENSE) ?
+                increment(schema.categories.budget, transaction.amount) :
+                decrement(schema.categories.budget, transaction.amount)
+              ,
+            })
+            .where(eq(schema.categories.id, transaction.categoryId));
         }
       });
 

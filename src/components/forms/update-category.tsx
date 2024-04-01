@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Category } from '@prisma/client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -14,6 +13,7 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import type { Category } from '~/db';
 import { FLOAT_REGEX, POSITIVE_FLOAT_REGEX, amountToCents, centsToAmount } from '~/utils/helpers';
 
 const updateCategorySchema = z.object({

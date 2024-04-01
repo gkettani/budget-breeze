@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Category, FinancialAccount } from '@prisma/client';
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -31,20 +30,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import type { Category, FinancialAccount } from '~/db';
 import { cn } from "~/lib/utils";
 import { TRANSACTION_TYPE } from '~/utils/enums';
 import { POSITIVE_FLOAT_REGEX, amountToCents } from '~/utils/helpers';
 
 const createTransactionSchema = z.object({
   description: z.string().min(1, { message: 'You must provide a description' }),
-  amount: z.string().regex(POSITIVE_FLOAT_REGEX, {
+  amount: z.coerce.string().regex(POSITIVE_FLOAT_REGEX, {
     message: 'The amount must be a number greater than 0 with up to 2 digits after the decimal point.',
   }).transform((value) => amountToCents(parseFloat(value))),
   date: z.date({
     required_error: 'Date is required',
   }),
-  categoryId: z.string().optional(),
-  financialAccountId: z.string({
+  categoryId: z.coerce.number().transform((val) => (val === -1 ? null : val)),
+  financialAccountId: z.coerce.number({
     required_error: 'You must select an account',
   }),
   type: z.union([
@@ -184,17 +184,23 @@ export function CreateTransactionForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange}>
+              <Select
+                onValueChange={field.onChange}
+                value={(field.value?.toString() === "-1" ? "" : field.value?.toString())}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category for you transaction" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
+                  <SelectItem value="-1" className="text-sm">
+                    No category
+                  </SelectItem>
                   {categories?.map((category) => (
                     <SelectItem
                       key={category.id}
-                      value={category.id}
+                      value={category.id.toString()}
                       className="text-sm"
                     >
                       {category.name}
@@ -222,7 +228,7 @@ export function CreateTransactionForm({
                   {financialAccounts?.map((financialAccount) => (
                     <SelectItem
                       key={financialAccount.id}
-                      value={financialAccount.id}
+                      value={financialAccount.id.toString()}
                       className="text-sm"
                     >
                       {financialAccount.name}
