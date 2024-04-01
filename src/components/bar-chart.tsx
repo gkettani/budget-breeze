@@ -3,7 +3,7 @@ import type { Transaction } from '~/db';
 import { formatCurrency } from '~/utils/helpers';
 
 type BarChartContainerProps = {
-  data: Transaction[];
+  data: Omit<Transaction, 'userId'>[];
 };
 
 export default function BarChartContainer({ data }: BarChartContainerProps) {

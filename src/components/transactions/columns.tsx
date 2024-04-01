@@ -8,7 +8,7 @@ import { TRANSACTION_TYPE } from '~/utils/enums';
 import { formatCurrency } from '~/utils/helpers';
 import { DataTableRowActions } from "./data-table-row-actions";
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns: ColumnDef<Omit<Transaction, 'userId'>>[] = [
   {
     id: "select",
     header: ({ table }) => (
