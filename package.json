@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "npm run db:migrate && next build",
     "dev": "next dev",
     "lint": "next lint",
     "lint:fix": "eslint --ext .ts --ext .tsx . --fix",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "db-seed": "tsx src/db/seed.ts",
-    "db-migrate": "tsx src/db/migrate.ts"
+    "db:seed": "tsx db/seed.ts",
+    "db:migrate": "tsx db/migrate.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.8.2",

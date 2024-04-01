@@ -3,7 +3,7 @@ import { env } from '~/env.mjs';
 
 export default {
   schema: './src/db/schema.ts',
-  out: './migrations',
+  out: './db/migrations',
   driver: 'turso',
   dbCredentials: {
     url: env.DATABASE_URL,
