@@ -7,9 +7,10 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z
-      .string()
-      .url(),
+    DATABASE_URL:
+      process.env.NODE_ENV === "production"
+        ? z.string().url()
+        : z.string().url().default("file:db/dev.db"),
     DATABASE_AUTH_TOKEN:
       process.env.NODE_ENV === "production"
         ? z.string()
