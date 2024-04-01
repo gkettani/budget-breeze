@@ -1,8 +1,8 @@
-import type { Category, Transaction, FinancialAccount } from '@prisma/client';
 import type { ColumnDef } from "@tanstack/react-table";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
+import type { Category, Transaction, FinancialAccount } from '~/db';
 import type { DateRange } from "~/types";
 import { TRANSACTION_TYPE } from '~/utils/enums';
 import { formatCurrency } from '~/utils/helpers';

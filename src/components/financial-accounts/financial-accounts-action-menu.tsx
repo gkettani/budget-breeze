@@ -1,4 +1,3 @@
-import type { FinancialAccount } from "@prisma/client";
 import React from "react";
 import UpdateFinancialAccountDialog from "~/components/dialogs/update-financial-account";
 import { Icons } from "~/components/icons";
@@ -22,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { toast } from "~/components/ui/use-toast";
+import type { FinancialAccount } from "~/db";
 import { api } from "~/utils/api";
 
 export function FinancialAccountsActionMenu({ financialAccount }: { financialAccount: FinancialAccount }) {

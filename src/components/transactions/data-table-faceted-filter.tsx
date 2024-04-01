@@ -1,4 +1,3 @@
-import type { Category } from "@prisma/client";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import type { Column } from "@tanstack/react-table";
 import * as React from "react";
@@ -19,6 +18,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
+import type { Category } from "~/db";
 import { cn } from "~/lib/utils";
 
 interface DataTableFacetedFilterProps<TData, TValue> {

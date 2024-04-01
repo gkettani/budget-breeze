@@ -1,4 +1,3 @@
-import type { Category } from "@prisma/client";
 import React from "react";
 import UpdateCategoryDialog from "~/components/dialogs/update-category";
 import UpdateCategoryBudgetDialog from "~/components/dialogs/update-category-budget";
@@ -23,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { toast } from "~/components/ui/use-toast";
+import type { Category } from "~/db";
 import { api } from "~/utils/api";
 
 export function CategoriesActionMenu({ category }: { category: Category }) {

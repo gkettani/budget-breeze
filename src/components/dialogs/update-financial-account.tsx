@@ -1,4 +1,3 @@
-import type { FinancialAccount } from "@prisma/client";
 import React from "react";
 import { UpdateFinancialAccountForm } from "~/components/forms/update-financial-account";
 import type { UpdateFinancialAccountFormValues } from "~/components/forms/update-financial-account";
@@ -9,6 +8,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { toast } from "~/components/ui/use-toast";
+import type { FinancialAccount } from "~/db";
 import { api } from "~/utils/api";
 
 export default function UpdateFinancialAccountDialog({

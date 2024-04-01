@@ -1,4 +1,3 @@
-import type { FinancialAccount } from "@prisma/client";
 import CreateFinancialAccountDialog from "~/components/dialogs/create-financial-account";
 import { FinancialAccountsActionMenu } from "~/components/financial-accounts/financial-accounts-action-menu";
 import { Icons } from "~/components/icons";
@@ -8,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import type { FinancialAccount } from "~/db";
 import { formatCurrency } from "~/utils/helpers";
 
 export default function FinancialAccountsList({ financialAccounts, isLoading }: { financialAccounts?: FinancialAccount[]; isLoading: boolean; }) {

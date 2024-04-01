@@ -1,5 +1,5 @@
-import type { Transaction } from '@prisma/client';
 import { BarChart, Card } from '@tremor/react';
+import type { Transaction } from '~/db';
 import { formatCurrency } from '~/utils/helpers';
 
 type BarChartContainerProps = {

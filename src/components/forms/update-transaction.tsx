@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Category, Transaction } from "@prisma/client";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -30,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import type { Category, Transaction } from "~/db";
 import { cn } from "~/lib/utils";
 
 const updateTransactionSchema = z.object({
@@ -37,7 +37,7 @@ const updateTransactionSchema = z.object({
   date: z.date({
     required_error: 'Date is required',
   }),
-  categoryId: z.string().optional().transform((val) => (val === 'clear_selection' ? '' : val)),
+  categoryId: z.coerce.number().transform((val) => (val === -1 ? null : val)).nullable(),
 });
 
 export type UpdateTransactionFormValues = z.infer<typeof updateTransactionSchema>;
@@ -57,7 +57,7 @@ export function UpdateTransactionForm({
     resolver: zodResolver(updateTransactionSchema),
     defaultValues: {
       description: transaction.description,
-      categoryId: transaction.categoryId ?? '',
+      categoryId: transaction.categoryId,
       date: transaction.date,
     },
   });
@@ -109,9 +109,6 @@ export function UpdateTransactionForm({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -129,8 +126,8 @@ export function UpdateTransactionForm({
               <FormLabel>Category</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={transaction.categoryId ?? ""}
-                value={(field.value === "clear_selection" ? "" : field.value)}
+                defaultValue={transaction.categoryId?.toString()}
+                value={(field.value?.toString() === "-1" ? "" : field.value?.toString())}
                 >
                 <FormControl>
                   <SelectTrigger>
@@ -138,13 +135,13 @@ export function UpdateTransactionForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="clear_selection" className="text-sm">
+                  <SelectItem value="-1" className="text-sm">
                     No category
                   </SelectItem>
                   {categories?.map((category) => (
                     <SelectItem
                       key={category.id}
-                      value={category.id}
+                      value={category.id.toString()}
                       className="text-sm"
                     >
                       {category.name}
