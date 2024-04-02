@@ -1,9 +1,8 @@
 import "dotenv/config";
-import path from "path";
 import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
 import { migrate } from "drizzle-orm/libsql/migrator";
-import { env } from "~/env.mjs";
+import { env } from "../src/env.mjs";
 
 async function main() {
   const db = drizzle(
@@ -11,7 +10,7 @@ async function main() {
   );
   console.log("Running migrations");
 
-  await migrate(db, { migrationsFolder: path.join(__dirname, "migrations") });
+  await migrate(db, { migrationsFolder: "db/migrations" });
 
   console.log("Migrated successfully");
 
