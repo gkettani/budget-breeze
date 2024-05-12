@@ -6,6 +6,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import type { Adapter } from 'next-auth/adapters';
+import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "~/db";
 import { env } from "~/env.mjs";
@@ -51,6 +52,17 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+    EmailProvider({
+      server: {
+        host: env.EMAIL_SERVER_HOST,
+        port: Number(env.EMAIL_SERVER_PORT),
+        auth: {
+          user: env.EMAIL_SERVER_USER,
+          pass: env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: env.EMAIL_FROM,
     }),
     /**
      * ...add more providers here.

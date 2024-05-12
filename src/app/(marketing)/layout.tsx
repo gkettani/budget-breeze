@@ -28,13 +28,13 @@ export default function MarketingLayout({
               Login
             </Link>
             <Link
-              href="/login"
+              href="/register"
               className={cn(
                 buttonVariants({ variant: "default" }),
                 "px-4",
               )}
             >
-              Start Free Trial
+              Get started free
             </Link>
           </nav>
         </div>
