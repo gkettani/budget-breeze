@@ -1,4 +1,9 @@
 # Budget breeze
+
+
+See live project: https://budget-breeze.fr
+
+
 ## Description
 This is a budget tracker application that allows users to manage their personal finances.
 
