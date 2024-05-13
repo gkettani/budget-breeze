@@ -12,6 +12,7 @@ import { columns } from "~/components/transactions/columns";
 import { DataTable } from "~/components/transactions/data-table";
 import { Toaster } from "~/components/ui/toaster";
 import { UserAccountNav } from "~/components/user-account-nav";
+import { siteConfig } from "~/config/site";
 import { api } from "~/utils/api";
 import { formatCurrency } from "~/utils/helpers";
 
@@ -46,9 +47,9 @@ export default function App() {
         <div className="container flex h-16 items-center justify-between py-4">
           <div>
             <Link href="/" className="hidden items-center space-x-2 md:flex">
-              <Icons.logo />
-              <span className="hidden font-bold sm:inline-block">
-                Budget Breeze
+              <Icons.logo className='h-6 w-6' />
+              <span className="hidden font-bold font-heading text-primary text-lg sm:inline-block">
+                {siteConfig.name}
               </span>
             </Link>
           </div>

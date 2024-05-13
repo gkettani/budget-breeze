@@ -1,7 +1,5 @@
 import Image from 'next/image';
-import Link from "next/link";
-import { Button } from "~/components/ui/button";
-import { Input } from '~/components/ui/input';
+import { UserEmailAuth } from '~/components/forms/user-email-auth';
 
 export default function IndexPage() {
   return (
@@ -23,18 +21,9 @@ export default function IndexPage() {
             <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8 text-center lg:text-left">
               Keep it simple, save big! Effortless budgeting for powerful financial control. Start saving with ease!
             </p>
-            <div className="flex gap-4 flex-col md:flex-row lg:w-full">
-              <Input
-                type="text"
-                placeholder="Enter your email"
-                className="w-96 bg-white/5"
-              />
-              <Button asChild>
-                <Link href="#" className='cursor-not-allowed'>Notify me</Link>
-              </Button>
-            </div>
+            <UserEmailAuth />
             <p className="text-xs text-muted-foreground">
-              Stay tuned for updates on our launch
+              Create your account and start saving today!
             </p>
           </div>
           <div className='w-[70rem] md:translate-x-36 h-[500px]'>
