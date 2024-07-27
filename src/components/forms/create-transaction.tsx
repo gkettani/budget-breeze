@@ -32,6 +32,7 @@ import {
 } from "~/components/ui/select";
 import type { Category, FinancialAccount } from '~/db';
 import { cn } from "~/lib/utils";
+import { NewUtcDate } from '~/utils/date';
 import { TRANSACTION_TYPE } from '~/utils/enums';
 import { POSITIVE_FLOAT_REGEX, amountToCents } from '~/utils/helpers';
 
@@ -42,7 +43,7 @@ const createTransactionSchema = z.object({
   }).transform((value) => amountToCents(parseFloat(value))),
   date: z.date({
     required_error: 'Date is required',
-  }),
+  }).transform((date) => NewUtcDate(date)),
   categoryId: z.coerce.number().transform((val) => (val === -1 ? null : val)),
   financialAccountId: z.coerce.number({
     required_error: 'You must select an account',
@@ -71,7 +72,7 @@ export function CreateTransactionForm({
     defaultValues: {
       description: '',
       amount: 0,
-      date: new Date(),
+      date: NewUtcDate(),
       type: TRANSACTION_TYPE.EXPENSE,
     },
   });
