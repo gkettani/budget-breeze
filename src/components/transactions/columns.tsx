@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import type { Category, Transaction, FinancialAccount } from '~/db';
 import type { DateRange } from "~/types";
-import { NewUtcDate } from "~/utils/date";
+import { formatDate, NewUtcDate } from "~/utils/date";
 import { TRANSACTION_TYPE } from '~/utils/enums';
 import { formatCurrency } from '~/utils/helpers';
 import { DataTableRowActions } from "./data-table-row-actions";
@@ -51,14 +51,8 @@ export const columns: ColumnDef<Omit<Transaction, 'userId'>>[] = [
     },
     cell: ({ row }) => {
       const date = new Date(row.getValue("date"));
-      const formatted = new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        timeZone: "UTC",
-      }).format(date);
 
-      return <div>{formatted}</div>;
+      return <div>{formatDate(date)}</div>;
     },
     filterFn: (row, id, value: Partial<DateRange> | undefined) => {
       if (!value || (!value.from && !value.to)) return true;

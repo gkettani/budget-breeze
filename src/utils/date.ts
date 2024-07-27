@@ -19,3 +19,12 @@ export function NewUtcDate(date?: Date) {
   const today = date ?? new Date();
   return new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
 }
+
+export function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
