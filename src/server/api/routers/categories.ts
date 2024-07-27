@@ -22,7 +22,7 @@ export const categoriesRouter = createTRPCRouter({
           and(
             eq(schema.transactions.userId, ctx.session.user.id),
             eq(schema.transactions.type, TRANSACTION_TYPE.EXPENSE),
-            gte(schema.transactions.date, new Date(new Date().getFullYear(), new Date().getMonth(), 1)),
+            gte(schema.transactions.date, new Date(new Date().getFullYear(), new Date().getMonth(), 1)), // TODO: fix date handling (set to UTC)
           ),
         );
 

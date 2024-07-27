@@ -31,12 +31,13 @@ import {
 } from "~/components/ui/select";
 import type { Category, Transaction } from "~/db";
 import { cn } from "~/lib/utils";
+import { NewUtcDate } from '~/utils/date';
 
 const updateTransactionSchema = z.object({
   description: z.string().min(1, { message: 'Description is required' }),
   date: z.date({
     required_error: 'Date is required',
-  }),
+  }).transform((date) => NewUtcDate(date)),
   categoryId: z.coerce.number().transform((val) => (val === -1 ? null : val)).nullable(),
 });
 

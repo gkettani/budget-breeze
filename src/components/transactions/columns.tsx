@@ -4,6 +4,7 @@ import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import type { Category, Transaction, FinancialAccount } from '~/db';
 import type { DateRange } from "~/types";
+import { NewUtcDate } from "~/utils/date";
 import { TRANSACTION_TYPE } from '~/utils/enums';
 import { formatCurrency } from '~/utils/helpers';
 import { DataTableRowActions } from "./data-table-row-actions";
@@ -50,10 +51,11 @@ export const columns: ColumnDef<Omit<Transaction, 'userId'>>[] = [
     },
     cell: ({ row }) => {
       const date = new Date(row.getValue("date"));
-      const formatted = new Intl.DateTimeFormat("fr-FR", {
+      const formatted = new Intl.DateTimeFormat("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
+        timeZone: "UTC",
       }).format(date);
 
       return <div>{formatted}</div>;
@@ -65,7 +67,8 @@ export const columns: ColumnDef<Omit<Transaction, 'userId'>>[] = [
       const fromDate = value.from ? value.from : new Date(0); // Default to the beginning of time
       const toDate = value.to ? value.to : new Date(); // Default to current date
 
-      return date >= fromDate && date <= toDate;
+      // Convert fromDate and toDate to UTC midnight to match the database date format
+      return date >= NewUtcDate(fromDate) && date <= NewUtcDate(toDate);
     },
   },
   {
