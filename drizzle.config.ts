@@ -9,4 +9,5 @@ export default {
     url: env.DATABASE_URL,
     authToken: env.DATABASE_AUTH_TOKEN,
   },
+  dialect: 'sqlite',
 } satisfies Config;

@@ -83,10 +83,9 @@ export function DataTableRowActions<TData>({
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Confirm Transaction Deletion</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
+              Deleting this transaction is permanent. The amount will be refunded to the original financial account, and associated category if applicable.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

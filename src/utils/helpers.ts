@@ -15,5 +15,5 @@ export function centsToAmount(amountInCents: number) {
   return parseFloat((amountInCents / 100).toFixed(2));
 }
 
-export const FLOAT_REGEX = /^-?\d+([.,]\d{1,2})?$/;
-export const POSITIVE_FLOAT_REGEX = /^\d+([.,]\d{1,2})?$/;
+export const FLOAT_REGEX = /^-?\d+([.]\d{1,2})?$/;
+export const POSITIVE_FLOAT_REGEX = /^\d+([.]\d{1,2})?$/;

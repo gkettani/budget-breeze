@@ -35,7 +35,7 @@ const updateTransactionSchema = z.object({
   description: z.string().min(1, { message: 'Description is required' }),
   date: z.date({
     required_error: 'Date is required',
-  }).transform((date) => NewUtcDate(date)),
+  }),
   categoryId: z.coerce.number().transform((val) => (val === -1 ? null : val)).nullable(),
 });
 
@@ -107,7 +107,7 @@ export function UpdateTransactionForm({
                     <Calendar
                       mode="single"
                       selected={field.value}
-                      onSelect={field.onChange}
+                      onSelect={date => field.onChange(NewUtcDate(date))}
                       initialFocus
                     />
                   </PopoverContent>

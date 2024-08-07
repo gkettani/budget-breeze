@@ -37,11 +37,11 @@ import { POSITIVE_FLOAT_REGEX, amountToCents } from '~/utils/helpers';
 const createTransactionSchema = z.object({
   description: z.string().min(1, { message: 'You must provide a description' }),
   amount: z.coerce.string().regex(POSITIVE_FLOAT_REGEX, {
-    message: 'The amount must be a number greater than 0 with up to 2 digits after the decimal point.',
-  }).transform((value) => amountToCents(parseFloat(value))),
+    message: 'The amount must be a number greater than 0 with up to 2 digits after the decimal point. Commas are not valid',
+  }).transform((value) => { console.log(value); return amountToCents(parseFloat(value));}),
   date: z.date({
     required_error: 'Date is required',
-  }).transform((date) => NewUtcDate(date)),
+  }),
   categoryId: z.coerce.number().transform((val) => (val === -1 ? null : val)),
   financialAccountId: z.coerce.number({
     required_error: 'You must select an account',
@@ -167,7 +167,7 @@ export function CreateTransactionForm({
                     <Calendar
                       mode="single"
                       selected={field.value}
-                      onSelect={field.onChange}
+                      onSelect={date => field.onChange(NewUtcDate(date))}
                       initialFocus
                     />
                   </PopoverContent>
