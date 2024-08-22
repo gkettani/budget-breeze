@@ -20,6 +20,7 @@ import {
   SunMedium,
   Moon,
   Laptop,
+  Info,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -64,6 +65,7 @@ export const Icons = {
   sun: (props: IconProps) => <SunMedium {...props} />,
   moon: (props: IconProps) => <Moon {...props} />,
   laptop: (props: IconProps) => <Laptop {...props} />,
+  info: (props: IconProps) => <Info {...props} />,
   google: (props: IconProps) => (
     <svg viewBox="0 0 48 48" {...props}>
       <title>Google Logo</title>
