@@ -2,7 +2,7 @@ import Link from "next/link";
 import { MainNav } from "~/components/main-nav";
 import { SiteFooter } from "~/components/site-footer";
 import { buttonVariants } from "~/components/ui/button";
-import { marketingConfig } from "~/config/marketing";
+import { marketingNav } from "~/config/pages";
 import { getCurrentUser } from "~/lib/session";
 import { cn } from "~/lib/utils";
 
@@ -18,7 +18,7 @@ export default async function MarketingLayout({
     <div className="flex min-h-screen flex-col">
       <header className="container z-40 bg-background">
         <div className="flex h-20 items-center justify-between py-6">
-          <MainNav items={marketingConfig.mainNav} />
+          <MainNav items={marketingNav} />
           <nav className='flex gap-4'>
             {user ? (
               <Link

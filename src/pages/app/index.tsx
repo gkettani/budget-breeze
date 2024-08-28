@@ -1,7 +1,6 @@
 import { Card, Grid, Text, Metric } from "@tremor/react";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
 import React from "react";
+import AppLayout from "~/components/app-layout";
 import BarChartContainer from "~/components/bar-chart";
 import CategoriesList from "~/components/categories/categories-list";
 import CreateTransactionDialog from "~/components/dialogs/create-transaction";
@@ -15,9 +14,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "~/components/ui/hover-card";
-import { Toaster } from "~/components/ui/toaster";
-import { UserAccountNav } from "~/components/user-account-nav";
-import { siteConfig } from "~/config/site";
 import { api } from "~/utils/api";
 import { formatCurrency } from "~/utils/helpers";
 
@@ -46,63 +42,39 @@ export default function App() {
     { title: "To Assign", metric: formatCurrency(totalMoney - assignedMoney) },
   ];
 
-  const { data: session } = useSession();
-
   return (
-    <div>
-      <header className="sticky top-0 z-40 border-b bg-background">
-        <div className="container flex h-16 items-center justify-between py-4">
-          <div>
-            <Link href="/" className="hidden items-center space-x-2 md:flex">
-              <Icons.logo className='h-6 w-6' />
-              <span className="hidden font-bold font-heading text-primary text-lg sm:inline-block">
-                {siteConfig.name}
-              </span>
-            </Link>
-          </div>
-          <UserAccountNav
-            user={{
-              name: session?.user?.name ?? "",
-              image: session?.user?.image ?? "",
-              email: session?.user?.email ?? "",
-            }}
-          />
+    <AppLayout>
+      <Grid numItemsSm={2} numItemsLg={3} className="gap-6 mb-5">
+        {metrics.map((item) => (
+          <Card key={item.title} decoration="top" decorationColor="indigo">
+            <Text>{item.title}</Text>
+            <Metric className="mt-5">{item.metric}</Metric>
+            {item.projection && (
+              <div className="font-light text-sm text-tremor-content flex items-center gap-2">
+                <span>End of month projection</span>
+                <span className="font-medium text-tremor-content-emphasis">{item.projection}</span>
+                <HoverCard openDelay={400} closeDelay={200}>
+                  <HoverCardTrigger><Icons.info className="w-4 hover:cursor-pointer hover:text-gray-800" /></HoverCardTrigger>
+                  <HoverCardContent>
+                    The projected value is calculated based on the targets set for each spending category.
+                  </HoverCardContent>
+                </HoverCard>
+              </div>
+            )}
+          </Card>
+        ))}
+      </Grid>
+      <CategoriesList className="mb-10" categories={categories} isLoading={isCategoriesLoading} />
+      <FinancialAccountsList financialAccounts={financialAccounts} isLoading={isFinancialAccountsLoading} />
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="font-bold text-2xl">Transactions</h2>
         </div>
-      </header>
-      <div className="container mx-auto py-10">
-        <Grid numItemsSm={2} numItemsLg={3} className="gap-6 mb-5">
-          {metrics.map((item) => (
-            <Card key={item.title} decoration="top" decorationColor="indigo">
-              <Text>{item.title}</Text>
-              <Metric className="mt-5">{item.metric}</Metric>
-              {item.projection && (
-                <div className="font-light text-sm text-tremor-content flex items-center gap-2">
-                  <span>End of month projection</span>
-                  <span className="font-medium text-tremor-content-emphasis">{item.projection}</span>
-                  <HoverCard openDelay={400} closeDelay={200}>
-                    <HoverCardTrigger><Icons.info className="w-4 hover:cursor-pointer hover:text-gray-800" /></HoverCardTrigger>
-                    <HoverCardContent>
-                      The projected value is calculated based on the targets set for each spending category.
-                    </HoverCardContent>
-                  </HoverCard>
-                </div>
-              )}
-            </Card>
-          ))}
-        </Grid>
-        <CategoriesList className="mb-10" categories={categories} isLoading={isCategoriesLoading} />
-        <FinancialAccountsList financialAccounts={financialAccounts} isLoading={isFinancialAccountsLoading} />
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="font-bold text-2xl">Transactions</h2>
-          </div>
-          <CreateTransactionDialog />
-        </div>
-        <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
-        <DonutChartContainer data={donutData} />
-        <BarChartContainer data={transactions ?? []} />
+        <CreateTransactionDialog />
       </div>
-      <Toaster />
-    </div>
+      <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
+      <DonutChartContainer data={donutData} />
+      <BarChartContainer data={transactions ?? []} />
+    </AppLayout>
   );
 }
