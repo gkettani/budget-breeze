@@ -1,6 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
+  "id": "c7f864c2-93dc-4671-a6b3-8d0e00c6530e",
+  "prevId": "56129fb3-2baa-4be7-b9cb-96ee35fe4f65",
   "tables": {
     "account": {
       "name": "account",
@@ -97,15 +99,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -157,15 +159,15 @@
         "category_user_id_user_id_fk": {
           "name": "category_user_id_user_id_fk",
           "tableFrom": "category",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -208,15 +210,15 @@
         "financial_account_user_id_user_id_fk": {
           "name": "financial_account_user_id_user_id_fk",
           "tableFrom": "financial_account",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -252,15 +254,15 @@
         "session_userId_user_id_fk": {
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -332,41 +334,41 @@
         "transaction_user_id_user_id_fk": {
           "name": "transaction_user_id_user_id_fk",
           "tableFrom": "transaction",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "transaction_category_id_category_id_fk": {
           "name": "transaction_category_id_category_id_fk",
           "tableFrom": "transaction",
+          "tableTo": "category",
           "columnsFrom": [
             "category_id"
           ],
-          "tableTo": "category",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "set null"
+          "onDelete": "set null",
+          "onUpdate": "no action"
         },
         "transaction_financial_account_id_financial_account_id_fk": {
           "name": "transaction_financial_account_id_financial_account_id_fk",
           "tableFrom": "transaction",
+          "tableTo": "financial_account",
           "columnsFrom": [
             "financial_account_id"
           ],
-          "tableTo": "financial_account",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -406,6 +408,13 @@
         "image": {
           "name": "image",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_active": {
+          "name": "last_active",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -473,9 +482,11 @@
   },
   "enums": {},
   "_meta": {
+    "schemas": {},
     "tables": {},
     "columns": {}
   },
-  "id": "56129fb3-2baa-4be7-b9cb-96ee35fe4f65",
-  "prevId": "00000000-0000-0000-0000-000000000000"
+  "internal": {
+    "indexes": {}
+  }
 }

@@ -1,22 +1,22 @@
 import type { NavItem } from "~/types";
 
 export const marketingNav: NavItem[] = [
-    {
-      title: "Features",
-      href: "/#features",
-    },
-    {
-      title: "Pricing",
-      href: "/pricing",
-    },
-    {
-      title: "Blog",
-      href: "/blog",
-    },
-    {
-      title: "Documentation",
-      href: "/docs",
-    },
+    // {
+    //   title: "Features",
+    //   href: "/#features",
+    // },
+    // {
+    //   title: "Pricing",
+    //   href: "/pricing",
+    // },
+    // {
+    //   title: "Blog",
+    //   href: "/blog",
+    // },
+    // {
+    //   title: "Documentation",
+    //   href: "/docs",
+    // },
 ];
 
 export const appMenu: NavItem[] = [

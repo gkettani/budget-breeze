@@ -1,25 +1,27 @@
+import type { AdapterAccountType } from "@auth/core/adapters";
 import { sqliteTable, text, integer, unique } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("user", {
-	id: text("id").notNull().primaryKey(),
+	id: text("id").notNull().primaryKey().$defaultFn(() => crypto.randomUUID()),
 	name: text("name"),
 	email: text("email").unique().notNull(),
 	emailVerified: integer("emailVerified", { mode: 'timestamp_ms' }),
 	image: text("image"),
+	lastActive: integer("last_active", { mode: "timestamp_ms" }).$defaultFn(() => new Date()),
 });
 
 export const accounts = sqliteTable("account", {
 	userId: text("userId").notNull().references(() => users.id, { onDelete: 'cascade' }),
-	type: text("type").notNull(),
+	type: text("type").$type<AdapterAccountType>().notNull(),
 	provider: text("provider").notNull(),
 	providerAccountId: text("providerAccountId").notNull(),
-	refreshToken: text("refresh_token"),
-	accessToken: text("access_token"),
-	expiresAt: integer("expires_at"),
-	tokenType: text("token_type"),
+	refresh_token: text("refresh_token"),
+	access_token: text("access_token"),
+	expires_at: integer("expires_at"),
+	token_type: text("token_type"),
 	scope: text("scope"),
-	idToken: text("id_token"),
-	sessionState: text("session_state"),
+	id_token: text("id_token"),
+	session_state: text("session_state"),
 }, (table) => {
 	return {
 		unique: unique().on(table.provider, table.providerAccountId),
