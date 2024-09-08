@@ -12,7 +12,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { db } from "~/db";
+import { db, schema, eq } from "~/db";
 import { getServerAuthSession } from "~/server/auth";
 
 /**
@@ -111,6 +111,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+  updateUserActiveDate(ctx);
   return next({
     ctx: {
       // infers the `session` as non-nullable
@@ -118,6 +119,25 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
     },
   });
 });
+
+/**
+ * Temporary solution to update user active date every 1 hour
+ */
+const updateUserActiveDate = (ctx: ReturnType<typeof createInnerTRPCContext>) => {
+  if (!ctx.session?.user) return;
+  const lastActive = ctx.session.user?.lastActive?.getTime() ?? 0;
+  const currentTime = new Date().getTime();
+  const ONE_HOUR_IN_MS = 60 * 60 * 1000;
+  if (currentTime - lastActive > ONE_HOUR_IN_MS) {
+    ctx.db
+      .update(schema.users)
+      .set({
+        lastActive: new Date(),
+      })
+      .where(eq(schema.users.id, ctx.session.user.id))
+      .catch(() => console.log("Error while updating user last active date"));
+  }
+};
 
 /**
  * Protected (authenticated) procedure

@@ -8,6 +8,13 @@
       "when": 1711905485964,
       "tag": "0000_tiresome_patch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1725889813957,
+      "tag": "0001_known_radioactive_man",
+      "breakpoints": true
     }
   ]
 }

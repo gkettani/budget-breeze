@@ -8,7 +8,7 @@ import {
 import type { Adapter } from 'next-auth/adapters';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from "next-auth/providers/google";
-import { db } from "~/db";
+import { db, schema } from "~/db";
 import { env } from "~/env.mjs";
 
 /**
@@ -21,15 +21,17 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
+      lastActive: Date | null;
       // ...other properties
       // role: UserRole;
     };
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    lastActive: Date | null;
+    // ...other properties
+    // role: UserRole;
+  }
 }
 
 /**
@@ -39,11 +41,15 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
+    /**
+     * Called whenever a session is checked e.g. getSession(), useSession(), /api/auth/session
+     */
     session: ({ session, user }) => ({
       ...session,
       user: {
         ...session.user,
         id: user.id,
+        lastActive: user.lastActive,
       },
     }),
   },
@@ -55,7 +61,12 @@ export const authOptions: NextAuthOptions = {
     // Use it to limit write operations. Set to 0 to always update the database.
     updateAge: 24 * 60 * 60, // 24 hours
   },
-  adapter: DrizzleAdapter(db) as Adapter,
+  adapter: DrizzleAdapter(db, {
+    usersTable: schema.users,
+    accountsTable: schema.accounts,
+    sessionsTable: schema.sessions,
+    verificationTokensTable: schema.verificationTokens,
+  }) as Adapter,
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
