@@ -42,7 +42,7 @@ const createTransactionSchema = z.object({
   date: z.date({
     required_error: 'Date is required',
   }),
-  categoryId: z.coerce.number().transform((val) => (val === -1 ? null : val)),
+  categoryId: z.coerce.number().transform((val) => (val === -1 ? undefined : val)).optional(),
   financialAccountId: z.coerce.number({
     required_error: 'You must select an account',
   }),

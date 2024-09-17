@@ -40,7 +40,7 @@ export const transactionsRouter = createTRPCRouter({
       description: z.string(),
       date: z.date(),
       amount: z.number(),
-      categoryId: z.number().nullable(),
+      categoryId: z.number().optional(),
       financialAccountId: z.number(),
       type: z.union([
         z.literal(TRANSACTION_TYPE.INCOME),
