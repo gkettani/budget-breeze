@@ -15,6 +15,7 @@ import {
   HoverCardTrigger,
 } from "~/components/ui/hover-card";
 import { api } from "~/utils/api";
+import { TRANSACTION_TYPE } from "~/utils/enums";
 import { formatCurrency } from "~/utils/helpers";
 
 export default function App() {
@@ -30,9 +31,12 @@ export default function App() {
       value: category.monthExpenseTotal,
     })) ?? [];
 
-  const assignedMoney = categories?.reduce((acc, category) => acc + Number(category.budget), 0) ?? 0;
-  const monthTotalExpenses = categories?.reduce((acc, category) => acc + Number(category.monthExpenseTotal), 0) ?? 0;
-  const totalMoney = financialAccounts?.reduce((acc, account) => acc + Number(account.balance), 0) ?? 0;
+  const assignedMoney = categories?.reduce((acc, category) => acc + category.budget, 0) ?? 0;
+  const monthTotalExpenses = transactions
+    ?.filter(t => t.type === TRANSACTION_TYPE.EXPENSE)
+    ?.filter(t => t.date > new Date(new Date().getFullYear(), new Date().getMonth(), 1))
+    ?.reduce((acc, transaction) => acc + transaction.amount, 0) ?? 0;
+  const totalMoney = financialAccounts?.reduce((acc, account) => acc + account.balance, 0) ?? 0;
 
   const expenseProjection = categories?.reduce((acc, category) => acc + Math.max(category.target, category.monthExpenseTotal), 0) ?? 0;
 
