@@ -20,20 +20,20 @@ export const marketingNav: NavItem[] = [
 ];
 
 export const appMenu: NavItem[] = [
-  // {
-  //   title: "Overview",
-  //   href: "/app",
-  // },
+  {
+    title: "Overview",
+    href: "/app",
+  },
   // {
   //   title: "Categories",
   //   href: "/app/categories",
   // },
-  // {
-  //   title: "Transactions",
-  //   href: "/app/transactions",
-  // },
-  // {
-  //   title: "Accounts",
-  //   href: "/app/accounts",
-  // },
+  {
+    title: "Transactions",
+    href: "/app/transactions",
+  },
+  {
+    title: "Accounts",
+    href: "/app/accounts",
+  },
 ];

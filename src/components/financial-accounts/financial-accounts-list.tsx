@@ -1,11 +1,9 @@
-import CreateFinancialAccountDialog from "~/components/dialogs/create-financial-account";
 import { FinancialAccountsActionMenu } from "~/components/financial-accounts/financial-accounts-action-menu";
 import { Icons } from "~/components/icons";
 import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "~/components/ui/card";
 import type { FinancialAccount } from "~/db";
 import { formatCurrency } from "~/utils/helpers";
@@ -13,10 +11,8 @@ import { formatCurrency } from "~/utils/helpers";
 export default function FinancialAccountsList({ financialAccounts, isLoading }: { financialAccounts?: FinancialAccount[]; isLoading: boolean; }) {
 
   return (
-    <Card className="w-[350px] my-10">
+    <Card className="border-none shadow-none">
       <CardHeader className=" flex-row justify-between items-center">
-        <CardTitle className="text-xl">Accounts</CardTitle>
-        <CreateFinancialAccountDialog />
       </CardHeader>
       <CardContent>
         {(!isLoading && financialAccounts?.length) ? (

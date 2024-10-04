@@ -7,7 +7,7 @@ import type { Transaction, FinancialAccount, Category } from '~/db';
 import { env } from "~/env.mjs";
 import { TRANSACTION_TYPE } from "~/utils/enums";
 
-const USER_ID = '82dfc2ca-1092-43e0-a83b-ba12017fc144';
+const USER_ID = '4cf09ad6-ae60-4dde-881e-4b75b5a3d925';
 
 function createRandomTransaction(financialAccounts: FinancialAccount[], categories: Omit<Category, "target">[]): Omit<Transaction, 'id'> {
   return {

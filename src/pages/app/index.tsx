@@ -3,12 +3,8 @@ import React from "react";
 import AppLayout from "~/components/app-layout";
 import BarChartContainer from "~/components/bar-chart";
 import CategoriesList from "~/components/categories/categories-list";
-import CreateTransactionDialog from "~/components/dialogs/create-transaction";
 import DonutChartContainer from "~/components/donut-chart";
-import FinancialAccountsList from "~/components/financial-accounts/financial-accounts-list";
 import { Icons } from "~/components/icons";
-import { columns } from "~/components/transactions/columns";
-import { DataTable } from "~/components/transactions/data-table";
 import {
   HoverCard,
   HoverCardContent,
@@ -19,9 +15,9 @@ import { TRANSACTION_TYPE } from "~/utils/enums";
 import { formatCurrency } from "~/utils/helpers";
 
 export default function App() {
-  const { data: transactions, isLoading: isTransactionsLoading } = api.transactions.list.useQuery();
+  const { data: transactions } = api.transactions.list.useQuery();
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.list.useQuery();
-  const { data: financialAccounts, isLoading: isFinancialAccountsLoading } = api.financialAccounts.list.useQuery();
+  const { data: financialAccounts } = api.financialAccounts.list.useQuery();
 
   const donutData = categories
     ?.filter((category) => category.monthExpenseTotal > 0)
@@ -68,17 +64,11 @@ export default function App() {
           </Card>
         ))}
       </Grid>
-      <CategoriesList className="mb-10" categories={categories} isLoading={isCategoriesLoading} />
-      <FinancialAccountsList financialAccounts={financialAccounts} isLoading={isFinancialAccountsLoading} />
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="font-bold text-2xl">Transactions</h2>
-        </div>
-        <CreateTransactionDialog />
+      <div className="flex flex-row items-center">
+        <DonutChartContainer data={donutData} />
+        <BarChartContainer data={transactions ?? []} />
       </div>
-      <DataTable columns={columns} data={transactions ?? []} isLoading={isTransactionsLoading} />
-      <DonutChartContainer data={donutData} />
-      <BarChartContainer data={transactions ?? []} />
+      <CategoriesList className="my-10" categories={categories} isLoading={isCategoriesLoading} />
     </AppLayout>
   );
 }
