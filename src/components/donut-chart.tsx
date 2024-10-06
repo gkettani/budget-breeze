@@ -16,7 +16,7 @@ export default function DonutChartContainer({ data }: {
 }) {
   return (
     <>
-      <Card className="sm:mx-auto sm:max-w-lg">
+      <Card className="sm:mx-auto lg:col-span-2">
         <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
           Total expenses by category
         </h3>

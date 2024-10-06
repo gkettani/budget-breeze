@@ -19,7 +19,7 @@ export default function IndexPage() {
               A budget that actually sticks
             </h1>
             <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8 text-center lg:text-left">
-              Keep it simple, save big! Effortless budgeting for powerful financial control. Start saving with ease!
+              Keep it simple, save big! Effortless budgeting for powerful financial control.
             </p>
             <UserEmailAuth />
             <p className="text-xs text-muted-foreground">
@@ -28,7 +28,7 @@ export default function IndexPage() {
           </div>
           <div className='w-[70rem] md:translate-x-36 h-[500px]'>
             <Image
-              src="/assets/test.png"
+              src="/assets/dashboard.jpeg"
               alt=""
               className="border shadow-md rounded-lg"
               draggable="false"

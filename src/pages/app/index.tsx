@@ -64,7 +64,7 @@ export default function App() {
           </Card>
         ))}
       </Grid>
-      <div className="flex flex-row items-center">
+      <div className="grid lg:grid-cols-5 gap-6">
         <DonutChartContainer data={donutData} />
         <BarChartContainer data={transactions ?? []} />
       </div>
