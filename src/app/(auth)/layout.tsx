@@ -1,8 +1,7 @@
-// import { redirect } from 'next/navigation';
+import { Suspense } from "react";
 
 export default function App({ children }: { children: React.ReactNode }) {
-  // if (process.env.VERCEL_ENV === 'production') {
-  //   return redirect('/');
-  // }
-  return <>{children}</>;
+  return <Suspense>
+    {children}
+  </Suspense>;
 }
