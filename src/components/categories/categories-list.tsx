@@ -1,7 +1,8 @@
-import { Card, Metric, Text, Flex, ProgressBar, Grid } from "@tremor/react";
+import { Card as TremorCard, Metric, Text, Flex, Grid } from "@tremor/react";
 import { CategoriesActionMenu } from "~/components/categories/categories-action-menu";
 import CreateCategoryDialog from "~/components/dialogs/create-category";
 import { Icons } from "~/components/icons";
+import { Progress } from "~/components/ui/progress";
 import { cn } from "~/lib/utils";
 import { type RouterOutputs } from "~/utils/api";
 import { formatCurrency } from "~/utils/helpers";
@@ -30,7 +31,7 @@ export default function CategoriesList({
         {(!isLoading && categories?.length) ? (
           categories
             .map((item) => (
-              <Card key={item.id}>
+              <TremorCard key={item.id}>
                 <Flex className="">
                   <Text>{item.name}</Text>
                   <CategoriesActionMenu category={item} />
@@ -40,14 +41,8 @@ export default function CategoriesList({
                   <Text className="truncate">{`${item.monthExpensePercentage.toFixed(2)}% • ${formatCurrency(item.monthExpenseTotal)}`}</Text>
                   <Text>{formatCurrency(item.target)}</Text>
                 </Flex>
-                <ProgressBar
-                  className="mt-2"
-                  value={item.monthExpensePercentage}
-                  color={item.monthExpensePercentage > 100 ? "red" : "blue"}
-                  // color gradient from green to red using the percent value
-                  // color={`hsl(${(1 - item.percent) * 120}, 100%, 50%)`}
-                />
-              </Card>
+                <Progress className="mt-2" value={item.monthExpensePercentage} variant={item.monthExpensePercentage > 100 ? "error" : "default"}/>
+              </TremorCard>
             ))
         ) : (
           <div className="flex flex-col items-center justify-center col-span-full">
