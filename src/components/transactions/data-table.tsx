@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("description")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm h-8"
+          className="max-w-xs h-8"
         />
         {table.getColumn("category") && (
           <DataTableFacetedFilter
