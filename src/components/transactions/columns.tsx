@@ -117,6 +117,10 @@ export const columns: ColumnDef<Omit<Transaction, 'userId'>>[] = [
       const account: FinancialAccount = row.getValue("financialAccount");
       return <div className="text-center">{account?.name}</div>;
     },
+    filterFn: (row, id, value: string) => {
+      const financialAccount: FinancialAccount = row.getValue(id);
+      return value.includes(financialAccount?.name);
+    },
   },
   {
     id: "actions",

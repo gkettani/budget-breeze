@@ -18,13 +18,13 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
-import type { Category } from "~/db";
+import type { Category, FinancialAccount } from "~/db";
 import { cn } from "~/lib/utils";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
-  column?: Column<TData, TValue>
-  title?: string
-  options: Category[]
+  column?: Column<TData, TValue>;
+  title?: string;
+  options: Category[] | FinancialAccount[];
 }
 
 export function DataTableFacetedFilter<TData, TValue>({

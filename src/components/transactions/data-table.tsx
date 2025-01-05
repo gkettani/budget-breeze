@@ -42,6 +42,7 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({});
 
   const { data: categories } = api.categories.list.useQuery();
+  const { data: financialAccounts } = api.financialAccounts.list.useQuery();
 
   const table = useReactTable({
     data,
@@ -78,6 +79,13 @@ export function DataTable<TData, TValue>({
             column={table.getColumn("category")}
             title="Category"
             options={categories ?? []}
+          />
+        )}
+        {table.getColumn("financialAccount") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("financialAccount")}
+            title="Account"
+            options={financialAccounts ?? []}
           />
         )}
         <DataTableTypeFilter column={table.getColumn("amount")} />
