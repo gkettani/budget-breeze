@@ -31,6 +31,11 @@ npm run dev
 - Run `npm run type-check` to check for TypeScript errors.
 - Run `npm run lint:fix` to fix linting errors.
 
+### Install a dependency in a specific package
+```
+npm install jest --workspace=server --workspace=@budget-breeze/api --save-dev
+```
+
 ## License
 This project is licensed under the MIT license.
 
