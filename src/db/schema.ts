@@ -1,5 +1,5 @@
 import type { AdapterAccountType } from "@auth/core/adapters";
-import { sqliteTable, text, integer, unique } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("user", {
 	id: text("id").notNull().primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -23,9 +23,9 @@ export const accounts = sqliteTable("account", {
 	id_token: text("id_token"),
 	session_state: text("session_state"),
 }, (table) => {
-	return {
-		unique: unique().on(table.provider, table.providerAccountId),
-	};
+	return [
+		unique().on(table.provider, table.providerAccountId),
+	];
 });
 
 export const sessions = sqliteTable("session", {
@@ -41,9 +41,9 @@ export const verificationTokens = sqliteTable("verificationToken", {
 	token: text("token").unique().notNull(),
 	expires: integer("expires", { mode: 'timestamp_ms' }).notNull(),
 }, (table) => {
-	return {
-		unique: unique().on(table.identifier, table.token),
-	};
+	return [
+		unique().on(table.identifier, table.token),
+	];
 });
 
 export const categories = sqliteTable("category", {
@@ -59,6 +59,8 @@ export const financialAccounts = sqliteTable("financial_account", {
 	userId: text("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
 	name: text("name").notNull(),
 	balance: integer("balance").notNull(),
+	type: text("type").default("payment").notNull(),
+	archived: integer({ mode: 'boolean'}).default(false),
 });
 
 export const transactions = sqliteTable("transaction", {

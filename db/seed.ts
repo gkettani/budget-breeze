@@ -5,7 +5,7 @@ import { drizzle } from "drizzle-orm/libsql";
 import { schema } from "~/db";
 import type { Transaction, FinancialAccount, Category } from '~/db';
 import { env } from "~/env.mjs";
-import { TRANSACTION_TYPE } from "~/utils/enums";
+import { FINANCIAL_ACCOUNT_TYPE, TRANSACTION_TYPE } from "~/utils/enums";
 
 const USER_ID = '4cf09ad6-ae60-4dde-881e-4b75b5a3d925';
 
@@ -27,6 +27,8 @@ function createRandomFinancialAccount(): FinancialAccount {
     name: faker.finance.accountName().concat(' ', faker.string.alpha(2)),
     balance: parseInt(faker.finance.amount(5000, 50000)),
     userId: USER_ID,
+    type: FINANCIAL_ACCOUNT_TYPE.PAYMENT,
+    archived: false,
   };
 }
 

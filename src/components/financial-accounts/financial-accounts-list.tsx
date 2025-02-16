@@ -7,6 +7,7 @@ import {
 } from "~/components/ui/card";
 import type { FinancialAccount } from "~/db";
 import { formatCurrency } from "~/utils/helpers";
+import { Badge } from "../ui/badge";
 
 export default function FinancialAccountsList({ financialAccounts, isLoading }: { financialAccounts?: FinancialAccount[]; isLoading: boolean; }) {
 
@@ -20,7 +21,7 @@ export default function FinancialAccountsList({ financialAccounts, isLoading }: 
             {financialAccounts?.map((financialAccount) => (
               <li key={financialAccount.id} className="border flex justify-between items-center shadow-sm rounded px-4 py-1">
                 <p>
-                  {financialAccount.name} <br />
+                  {financialAccount.name} {financialAccount.archived && <Badge variant="secondary" className="mx-1">archived</Badge>}<br />
                   <span className='text-slate-500'>{formatCurrency(financialAccount.balance)}</span>
                 </p>
                 <FinancialAccountsActionMenu financialAccount={financialAccount} />

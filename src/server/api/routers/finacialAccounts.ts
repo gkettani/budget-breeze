@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { schema, eq, and } from '~/db';
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { FINANCIAL_ACCOUNT_TYPE } from "~/utils/enums";
 
 export const financialAccountsRouter = createTRPCRouter({
   list: protectedProcedure
@@ -39,18 +40,25 @@ export const financialAccountsRouter = createTRPCRouter({
   update: protectedProcedure
     .input(z.object({
       id: z.number(),
-      name: z.string(),
-      balance: z.number(),
+      name: z.string().optional(),
+      balance: z.number().optional(),
+      type: z.union([
+        z.literal(FINANCIAL_ACCOUNT_TYPE.PAYMENT),
+        z.literal(FINANCIAL_ACCOUNT_TYPE.SAVINGS),
+      ]).optional(),
+      archived: z.boolean().optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
-      const { id, name, balance } = input;
+      const { id, name, balance, type, archived } = input;
 
       const account = await db
         .update(schema.financialAccounts)
         .set({
           name,
           balance,
+          type,
+          archived,
         })
         .where(and(
           eq(schema.financialAccounts.id, id),

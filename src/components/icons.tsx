@@ -21,6 +21,7 @@ import {
   Moon,
   Laptop,
   Info,
+  Archive,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -29,6 +30,7 @@ type IconProps = React.HTMLAttributes<SVGElement>
 export const Icons = {
   alertTriangle: (props: IconProps) => <AlertTriangle {...props} />,
   arrowRight: (props: IconProps) => <ArrowRight {...props} />,
+  archive: (props: IconProps) => <Archive {...props} />,
   check: (props: IconProps) => <Check {...props} />,
   chevronLeft: (props: IconProps) => <ChevronLeft {...props} />,
   chevronRight: (props: IconProps) => <ChevronRight {...props} />,

@@ -12,6 +12,7 @@ import {
 } from "~/components/ui/dialog";
 import { toast } from "~/components/ui/use-toast";
 import { api } from "~/utils/api";
+import { FINANCIAL_ACCOUNT_TYPE } from "~/utils/enums";
 
 export default function CreateTransactionDialog() {
   const [open, setOpen] = React.useState<boolean>(false);
@@ -27,12 +28,15 @@ export default function CreateTransactionDialog() {
       void utils.financialAccounts.invalidate();
       void utils.categories.invalidate();
       setOpen(false);
+      toast({
+        title: '✅ Transaction created',
+      });
     },
     onError: (error) => {
       toast({
-        title: 'Échec de la creation de la transaction',
+        title: 'Transaction not created',
         variant: 'destructive',
-        description: error.message || 'Une erreur est survenue',
+        description: error.message || 'An unexpected error happened !',
       });
     },
   });
@@ -55,7 +59,7 @@ export default function CreateTransactionDialog() {
         <CreateTransactionForm
           onSubmit={createTransaction}
           categories={categories}
-          financialAccounts={financialAccounts}
+          financialAccounts={financialAccounts?.filter(({ archived, type }) => !archived && type === FINANCIAL_ACCOUNT_TYPE.PAYMENT)}
           isLoading={isLoading}
         />
       </DialogContent>
