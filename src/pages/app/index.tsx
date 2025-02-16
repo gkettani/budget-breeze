@@ -15,9 +15,9 @@ import { TRANSACTION_TYPE } from "~/utils/enums";
 import { formatCurrency } from "~/utils/helpers";
 
 export default function App() {
-  const { data: transactions } = api.transactions.list.useQuery();
+  const { data: transactions, isLoading: isTransactionsLoading } = api.transactions.list.useQuery();
   const { data: categories, isLoading: isCategoriesLoading } = api.categories.list.useQuery();
-  const { data: financialAccounts } = api.financialAccounts.list.useQuery();
+  const { data: financialAccounts, isLoading: isFinancialAccountsLoading } = api.financialAccounts.list.useQuery();
 
   const donutData = categories
     ?.filter((category) => category.monthExpenseTotal > 0)
@@ -43,7 +43,7 @@ export default function App() {
   ];
 
   return (
-    <AppLayout>
+    <AppLayout isLoading={isTransactionsLoading || isCategoriesLoading || isFinancialAccountsLoading}>
       <Grid numItemsSm={2} numItemsLg={3} className="gap-6 mb-5">
         {metrics.map((item) => (
           <Card key={item.title} decoration="top" decorationColor="indigo">
