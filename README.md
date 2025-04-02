@@ -1,7 +1,7 @@
 # Budget breeze
 
 
-See live project: https://budget-breeze.fr
+See live project: https://budget-breeze.com
 
 
 ## Description
