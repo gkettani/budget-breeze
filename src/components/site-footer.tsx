@@ -25,7 +25,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
           Made with &#x2764;&#xfe0f; by Ghali Kettani
         </p>
         <p className="text-muted-foreground text-center text-sm">
-          © 2024 Budget Breeze
+          © 2025 Budget Breeze
         </p>
       </div>
     </footer>
