@@ -18,7 +18,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
             <Link href="terms">Terms of Service</Link>
           </Button>
           <Button variant={'link'} asChild>
-            <Link href="mailto:contact@budget-breeze.fr">Contact us</Link>
+            <Link href="mailto:contact@budget-breeze.com">Contact us</Link>
           </Button>
         </div>
         <p className="text-muted-foreground text-center text-sm">
