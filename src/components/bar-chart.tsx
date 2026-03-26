@@ -12,16 +12,16 @@ type BarChartContainerProps = {
 	data: Omit<Transaction, "userId">[];
 };
 
-function getYTDStart(): Date {
-	const now = new Date();
-	return new Date(now.getFullYear(), 0, 1); // Jan 1st of current year
+function getLast6MonthsStart(): Date {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() - 6, 1);
 }
 
 export default function BarChartContainer({ data }: BarChartContainerProps) {
-	const [date, setDate] = useState<Partial<DateRange> | undefined>({
-		from: getYTDStart(),
-		to: new Date(),
-	});
+  const [date, setDate] = useState<Partial<DateRange> | undefined>({
+    from: getLast6MonthsStart(),
+    to: new Date(new Date().getFullYear(), new Date().getMonth(), 0), // last day of previous month
+  });
 
 	const filteredData = useMemo(() => {
 		if (!date?.from && !date?.to) return data;
