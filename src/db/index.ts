@@ -18,5 +18,5 @@ export type CategoryUpsert = typeof schema.categories.$inferInsert;
 export type FinancialAccountUpsert = typeof schema.financialAccounts.$inferInsert;
 
 export * from 'drizzle-orm';
-export * as schema from './schema';
 export * from './client';
+export * as schema from './schema';

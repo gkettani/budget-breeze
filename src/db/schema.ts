@@ -1,5 +1,5 @@
-import type { AdapterAccountType } from "@auth/core/adapters";
 import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
+import type { AdapterAccount } from "next-auth/adapters"
 
 export const users = sqliteTable("user", {
 	id: text("id").notNull().primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -9,6 +9,8 @@ export const users = sqliteTable("user", {
 	image: text("image"),
 	lastActive: integer("last_active", { mode: "timestamp_ms" }).$defaultFn(() => new Date()),
 });
+
+type AdapterAccountType = AdapterAccount["type"]
 
 export const accounts = sqliteTable("account", {
 	userId: text("userId").notNull().references(() => users.id, { onDelete: 'cascade' }),
