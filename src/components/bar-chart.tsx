@@ -1,19 +1,47 @@
 import { BarChart, Card } from "@tremor/react";
+import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { Transaction } from "~/db";
 import { cn } from "~/lib/utils";
+import type { DateRange } from "~/types";
 import { TRANSACTION_TYPE } from "~/utils/enums";
 import { formatCurrency, formatPercent } from "~/utils/helpers";
+import { DateRangePicker } from "./date-range-picker";
 
 type BarChartContainerProps = {
 	data: Omit<Transaction, "userId">[];
 };
 
+function getYTDStart(): Date {
+	const now = new Date();
+	return new Date(now.getFullYear(), 0, 1); // Jan 1st of current year
+}
+
 export default function BarChartContainer({ data }: BarChartContainerProps) {
+	const [date, setDate] = useState<Partial<DateRange> | undefined>({
+		from: getYTDStart(),
+		to: new Date(),
+	});
+
+	const filteredData = useMemo(() => {
+		if (!date?.from && !date?.to) return data;
+		return data.filter((transaction) => {
+			const txDate = new Date(transaction.date);
+			if (date.from && txDate < date.from) return false;
+			if (date.to) {
+				// Include the full "to" day by comparing against end of that day
+				const endOfDay = new Date(date.to);
+				endOfDay.setHours(23, 59, 59, 999);
+				if (txDate > endOfDay) return false;
+			}
+			return true;
+		});
+	}, [data, date]);
+
 	const expensesByMonth: Record<string, number> = {};
 	const incomesByMonth: Record<string, number> = {};
 
-	data?.forEach((transaction) => {
+	filteredData?.forEach((transaction) => {
 		const date = new Date(transaction.date);
 		const month = date.toLocaleString("default", {
 			month: "short",
@@ -116,27 +144,25 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
 	return (
 		<>
 			<Card className="p-0 sm:mx-auto lg:col-span-3">
-				<div className="p-6">
-					<h3 className="font-medium text-gray-900">Statistics summary</h3>
-					<p className="text-sm/6 text-gray-500">
-						Get a clear view of your income, expenses, savings, and savings rate
-						to track your financial progress.
-					</p>
-				</div>
-				<div className="border-t border-gray-200 p-6">
+				<div className="border-gray-200 p-6">
 					<Tabs defaultValue="Incomes vs Expenses">
-						<div>
-							<TabsList>
-								{tabs.map((tab) => (
-									<TabsTrigger
-										key={tab.name}
-										value={tab.name}
-										className="w-full"
-									>
-										{tab.name}
-									</TabsTrigger>
-								))}
-							</TabsList>
+						<div className="flex justify-between">
+							<div>
+								<TabsList>
+									{tabs.map((tab) => (
+										<TabsTrigger
+											key={tab.name}
+											value={tab.name}
+											className="w-full"
+										>
+											{tab.name}
+										</TabsTrigger>
+									))}
+								</TabsList>
+							</div>
+							<div>
+								<DateRangePicker date={date} setDate={setDate} />
+							</div>
 						</div>
 						{tabs.map((tab) => (
 							<TabsContent key={tab.name} value={tab.name}>
