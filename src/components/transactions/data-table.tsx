@@ -1,3 +1,8 @@
+import type {
+	ColumnDef,
+	ColumnFiltersState,
+	SortingState,
+} from "@tanstack/react-table";
 import {
 	flexRender,
 	getCoreRowModel,
@@ -5,11 +10,6 @@ import {
 	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
-} from "@tanstack/react-table";
-import type {
-	ColumnDef,
-	SortingState,
-	ColumnFiltersState,
 } from "@tanstack/react-table";
 import * as React from "react";
 import { Icons } from "~/components/icons";

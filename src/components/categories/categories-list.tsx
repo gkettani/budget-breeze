@@ -1,4 +1,4 @@
-import { Card as TremorCard, Metric, Text, Flex, Grid } from "@tremor/react";
+import { Flex, Grid, Metric, Text, Card as TremorCard } from "@tremor/react";
 import { CategoriesActionMenu } from "~/components/categories/categories-action-menu";
 import CreateCategoryDialog from "~/components/dialogs/create-category";
 import { Icons } from "~/components/icons";

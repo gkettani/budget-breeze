@@ -7,18 +7,18 @@ import { Button } from "~/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormLabel,
 	FormField,
 	FormItem,
+	FormLabel,
 	FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import type { Category } from "~/db";
 import {
-	FLOAT_REGEX,
-	POSITIVE_FLOAT_REGEX,
 	amountToCents,
 	centsToAmount,
+	FLOAT_REGEX,
+	POSITIVE_FLOAT_REGEX,
 } from "~/utils/helpers";
 
 const updateCategorySchema = z.object({

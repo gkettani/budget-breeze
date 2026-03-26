@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { schema, eq, and } from "~/db";
+import { and, eq, schema } from "~/db";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { FINANCIAL_ACCOUNT_TYPE } from "~/utils/enums";
 

@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
-import type { Category, Transaction, FinancialAccount } from "~/db";
+import type { Category, FinancialAccount, Transaction } from "~/db";
 import type { DateRange } from "~/types";
 import { formatDate, NewUtcDate } from "~/utils/date";
 import { TRANSACTION_TYPE } from "~/utils/enums";

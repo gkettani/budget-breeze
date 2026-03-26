@@ -7,14 +7,14 @@ import { Button } from "~/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormLabel,
+	FormDescription,
 	FormField,
 	FormItem,
+	FormLabel,
 	FormMessage,
-	FormDescription,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { FLOAT_REGEX, amountToCents } from "~/utils/helpers";
+import { amountToCents, FLOAT_REGEX } from "~/utils/helpers";
 
 const updateCategoryBudgetSchema = z.object({
 	amount: z.coerce

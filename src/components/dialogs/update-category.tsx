@@ -1,6 +1,6 @@
 import React from "react";
-import { UpdateCategoryForm } from "~/components/forms/update-category";
 import type { UpdateCategoryFormValues } from "~/components/forms/update-category";
+import { UpdateCategoryForm } from "~/components/forms/update-category";
 import {
 	Dialog,
 	DialogContent,

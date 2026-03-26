@@ -1,6 +1,6 @@
 import React from "react";
-import { UpdateTransactionForm } from "~/components/forms/update-transaction";
 import type { UpdateTransactionFormValues } from "~/components/forms/update-transaction";
+import { UpdateTransactionForm } from "~/components/forms/update-transaction";
 import {
 	Dialog,
 	DialogContent,

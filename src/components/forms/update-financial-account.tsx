@@ -7,9 +7,9 @@ import { Button } from "~/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormLabel,
 	FormField,
 	FormItem,
+	FormLabel,
 	FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
@@ -19,7 +19,7 @@ import {
 	FINANCIAL_ACCOUNT_TYPE,
 	type FinancialAccountType,
 } from "~/utils/enums";
-import { FLOAT_REGEX, amountToCents, centsToAmount } from "~/utils/helpers";
+import { amountToCents, centsToAmount, FLOAT_REGEX } from "~/utils/helpers";
 
 const updateFinancialAccountSchema = z.object({
 	name: z.string().min(1, { message: "Name is required" }),

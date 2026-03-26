@@ -1,4 +1,4 @@
-import { Card, Grid, Text, Metric } from "@tremor/react";
+import { Card, Grid, Metric, Text } from "@tremor/react";
 import React from "react";
 import AppLayout from "~/components/app-layout";
 import BarChartContainer from "~/components/bar-chart";

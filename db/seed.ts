@@ -2,8 +2,8 @@ import "dotenv/config";
 import { faker } from "@faker-js/faker";
 import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
+import type { Category, FinancialAccount, Transaction } from "~/db";
 import { schema } from "~/db";
-import type { Transaction, FinancialAccount, Category } from "~/db";
 import { env } from "~/env.mjs";
 import { FINANCIAL_ACCOUNT_TYPE, TRANSACTION_TYPE } from "~/utils/enums";
 
