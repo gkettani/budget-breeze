@@ -16,15 +16,17 @@
  * // Outputs: '2024-07-27T00:00:00.000Z'
  */
 export function NewUtcDate(date?: Date) {
-  const today = date ?? new Date();
-  return new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+	const today = date ?? new Date();
+	return new Date(
+		Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()),
+	);
 }
 
 export function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    timeZone: "UTC",
-  }).format(date);
+	return new Intl.DateTimeFormat("en-US", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+		timeZone: "UTC",
+	}).format(date);
 }

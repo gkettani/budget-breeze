@@ -9,9 +9,9 @@ import { createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  categories: categoriesRouter,
-  financialAccounts: financialAccountsRouter,
-  transactions: transactionsRouter,
+	categories: categoriesRouter,
+	financialAccounts: financialAccountsRouter,
+	transactions: transactionsRouter,
 });
 
 // export type definition of API
